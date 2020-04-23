@@ -22,7 +22,7 @@ class EventDateSerializer < ActiveModel::Serializer
   attribute :end_time do
     end_time = object.end_time_key.to_s
     end_time = "0#{end_time}" if end_time.length == 3
-    minutes = end_time.split(//).last(2).join
+    minutes = end_time.last(2)
     if minutes == '00'
       Time.strptime(end_time, '%H%M').strftime('%l %p').lstrip
     else
