@@ -11,7 +11,7 @@ class EventDateSerializer < ActiveModel::Serializer
   attribute :start_time do
     start_time = object.start_time_key.to_s
     start_time = "0#{start_time}" if start_time.length == 3
-    minutes = start_time.split(//).last(2).join
+    minutes = start_time.last(2)
     if minutes == '00'
       Time.strptime(start_time, '%H%M').strftime('%l %p').lstrip
     else
