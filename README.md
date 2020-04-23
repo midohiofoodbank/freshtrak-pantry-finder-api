@@ -1,27 +1,60 @@
-# FreshTrak Public Facing API
-![](https://github.com/midohiofoodbank/freshtrak-public/workflows/Pantry%20Finder%20API%20CI/badge.svg)
-[![codecov](https://codecov.io/gh/midohiofoodbank/freshtrak-public/branch/master/graph/badge.svg)](https://codecov.io/gh/midohiofoodbank/freshtrak-public)
+# Pantry Finder API
+Public API that exposes select tables from the PantryTrak datasource
 
-Partnership between Can't Stop Columbus and the Mid-Ohio Foodbank to create a public api for the FreshTrak database
+Built and deployed using the [Ruby on Jets](https://rubyonjets.com/) framework
 
-### Original Idea: 
+## Prerequisites
 
-[Whiteboard Drawing](https://drive.google.com/file/d/1MBzqWMGTDQS-R1mZc68A5V8Heoi3IBMy/view?usp=sharing)
+1. [Ruby 2.5.3](https://www.ruby-lang.org/en/downloads/)
+2. [Bundler](https://bundler.io/)
+3. [MySQL 8.0.x](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
 
-### Vocabulary
+## Setup
 
-**Customer**: A person or family in search of food who may or may not already be engaged with some part of the feeding network. There are ~46 million individuals across the nation who are customers. These individual customers make up over 17 million households.
+From the `pantry-finder-api` folder
+```bash
+bundle install # Install dependencies
+./bin/setup_dev_db # Seed development and test databases
+```
 
-**Feeding Network**: General term for all people and organizations involved in trying to feed customers.
+## Local development
 
-**Foodbank**: Large distribution centers that provide food to local agencies. There are ~220 foodbanks across the United States.
+Unit Tests
+```bash
+bundle exec rspec
+```
 
-**Agencies**: Broad term encompassing all types of organizations that work with foodbanks to distribute food to customers. Specific types of agencies include Food pantries, produce markets, Mid-Ohio Markets, soup kitchens, meal sites, etc… There are ~40k agencies across the nation.
+Development server
+```bash
+bundle exec jets server
+```
 
-**Food Resources**: General term for the services agencies provide.
+Console
+```bash
+bundle exec jets console
+```
 
-**Service territory**: General term for all of the geographies served by a single foodbank.
+### Updating the schema file
 
-### Journeys
+This api exposes an existing data source. From time to time, new tables or columns are added to the source database. The `db/schema.rb` file needs to be kept in sync when this happens. It's also nice to take a fresh dump of the db at that time to make local development easier.
+```bash
+DB_HOST=<rds_host> DB_USER=<user> DB_PASS=<password> DB_NAME=freshtrak_public bundle exec jets db:schema:dump
+```
+```bash
+rm ./setup/seed.sql.zip
+mysqldump -h <rds_host> -u <user> -p<password> freshtrak_public > setup/seed.sql
+zip setup/seed.sql.zip setup/seed.sql
+rm setup/seed.sql
+```
 
-[Customer Journey](https://docs.google.com/document/d/1sIdBbXS5muUR4fwDZVw1pn9QkwEFfW9m3QK5ajZgD3E/edit?usp=sharing) - External Google Doc collecting initial ideas, thoughts, and requirements
+## Deployment
+
+This project is deployed using the [jets cli](https://rubyonjets.com/docs/deploy/).
+Under the hood it creates nested [CloudFormation stacks](https://rubyonjets.com/docs/debugging/cloudformation/).
+The relevant configuration files are at `config/application.rb` and `config/environments/*`.
+Environment variables are set using the `.env.*` files.
+
+Deploying to beta
+```
+AWS_PROFILE=<profile> AWS_REGION=us-east-2 JETS_ENV=beta bundle exec jets deploy
+```
