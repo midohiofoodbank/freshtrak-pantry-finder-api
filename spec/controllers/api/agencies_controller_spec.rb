@@ -78,8 +78,8 @@ describe Api::AgenciesController, type: :controller do
                 {
                   id: event_date.id,
                   event_id: event.id,
-                  start_time: '09:30 AM',
-                  end_time: '10:00 PM',
+                  start_time: '9:30 AM',
+                  end_time: '10 PM',
                   date: date
                 }
               ]
