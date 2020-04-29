@@ -8,7 +8,6 @@ class EventSerializer < ActiveModel::Serializer
   attribute :pt_longitude, key: :longitude
   attribute :event_name, key: :name
   attribute :service_description, key: :service
-  attribute :distance
 
   has_many :event_dates
 
@@ -18,24 +17,9 @@ class EventSerializer < ActiveModel::Serializer
     "#{object.address1} #{object.address2}"
   end
 
-  def distance
-    zip_query = @instance_options[:zip_query]
-    return '' if zip_query.blank?
-
-    get_coordinates(zip_query)
-  end
-
-  def get_coordinates(zip_query)
-    zip_lat = ::ZipCode.select(:latitude)
-                       .where(zip_code: zip_query).to_a.first.latitude
-    zip_long = ::ZipCode.select(:longitude)
-                        .where(zip_code: zip_query).to_a.first.longitude
-    calc_distance(zip_lat, zip_long)
-  end
-
-  def calc_distance(zip_lat, zip_long)
-    Geocoder::Calculations.distance_between([zip_lat, zip_long],
-                                            [object.pt_latitude,
-                                             object.pt_longitude]).round(2)
+  # serialize instances of distance through model
+  attribute :estimated_distance do
+    object.estimated_distance(@instance_options[:loc_lat],
+                              @instance_options[:loc_long])
   end
 end

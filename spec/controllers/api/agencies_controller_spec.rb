@@ -53,7 +53,7 @@ describe Api::AgenciesController, type: :controller do
     expect(response_body).to eq(expected_response(request_params))
   end
 
-  def expected_response(request_params)
+  def expected_response(rq_prms)
     {
       agencies: [
         {
@@ -77,10 +77,10 @@ describe Api::AgenciesController, type: :controller do
               agency_id: event.loc_id,
               name: event.event_name,
               service: event.service_description,
-              distance: get_coordinates(event_zip_code.zip_code,
-                                        event.pt_latitude,
-                                        event.pt_longitude,
-                                        request_params),
+              estimated_distance: event.estimated_distance(
+                loc_lat(rq_prms, event_zip_code.zip_code),
+                loc_long(rq_prms, event_zip_code.zip_code)
+              ),
               event_dates: [
                 {
                   id: event_date.id,
@@ -97,19 +97,13 @@ describe Api::AgenciesController, type: :controller do
     }
   end
 
-  def get_coordinates(zip_query, latitude, longitude, request_params)
-    return '' if request_params.to_s.include?(':zip_code') == false
-
-    zip_lat = ::ZipCode.select(:latitude)
-                       .where(zip_code: zip_query).to_a.first.latitude
-    zip_long = ::ZipCode.select(:longitude)
-                        .where(zip_code: zip_query).to_a.first.longitude
-    calc_distance(zip_lat, zip_long, latitude, longitude)
+  # Supply lat/long from the zip code to call the model distance
+  # method.
+  def loc_lat(rq_prms, zip_code)
+    rq_prms.to_s.include?('zip_code') ? Geo.zip_lat(zip_code) : nil
   end
 
-  def calc_distance(zip_lat, zip_long, latitude, longitude)
-    Geocoder::Calculations.distance_between([zip_lat, zip_long],
-                                            [latitude,
-                                             longitude]).round(2)
+  def loc_long(rq_prms, zip_code)
+    rq_prms.to_s.include?('zip_code') ? Geo.zip_long(zip_code) : nil
   end
 end

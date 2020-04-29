@@ -3,6 +3,7 @@
 # Physical event at a location
 class Event < ApplicationRecord
   alias_attribute :id, :event_id
+  attribute :estimated_distance, :float, default: -> { 0.0 }
 
   belongs_to :agency, foreign_key: :loc_id, inverse_of: :events
   belongs_to :service_type, foreign_key: :service_id, inverse_of: :events
@@ -19,5 +20,17 @@ class Event < ApplicationRecord
 
   def service_description
     service_category.service_category_name
+  end
+
+  # define virtual column distance
+  def estimated_distance(loc_lat, loc_long)
+    return '' if loc_lat.nil? || loc_long.nil?
+
+    Geo.dist_btn_coords(loc_lat, loc_long, pt_latitude, pt_longitude)
+  end
+
+  # ensure virtual columns can be included in serializer
+  def as_json(_options = {})
+    super(methods: [:distance])
   end
 end
