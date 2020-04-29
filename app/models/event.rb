@@ -22,6 +22,8 @@ class Event < ApplicationRecord
     service_category.service_category_name
   end
 
+  # method to populate estimated_ distance virtual attribute
+  # called from serializer and controller rspec
   def estimated_distance(loc_lat, loc_long)
     return '' if loc_lat.nil? || loc_long.nil?
 
