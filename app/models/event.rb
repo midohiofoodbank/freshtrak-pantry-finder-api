@@ -22,15 +22,9 @@ class Event < ApplicationRecord
     service_category.service_category_name
   end
 
-  # define virtual column distance
   def estimated_distance(loc_lat, loc_long)
     return '' if loc_lat.nil? || loc_long.nil?
 
     Geo.dist_btn_coords(loc_lat, loc_long, pt_latitude, pt_longitude)
-  end
-
-  # ensure virtual columns can be included in serializer
-  def as_json(_options = {})
-    super(methods: [:distance])
   end
 end
