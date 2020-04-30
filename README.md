@@ -54,7 +54,6 @@ Under the hood it creates nested [CloudFormation stacks](https://rubyonjets.com/
 The relevant configuration files are at `config/application.rb` and `config/environments/*`.
 Environment variables are set using the `.env.*` files.
 
-Deploying to beta
 ```
-AWS_PROFILE=<profile> AWS_REGION=us-east-2 JETS_ENV=beta bundle exec jets deploy
+AWS_PROFILE=<profile> AWS_REGION=us-east-2 JETS_ENV=<env> bundle exec jets deploy
 ```
