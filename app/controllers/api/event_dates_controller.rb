@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
-class Api::EventDatesController < ApplicationController
-  before_action :set_event_date, only: [:show]
+module Api
+  # Controller to expose Event Dates
+  class EventDatesController < ApplicationController
+    before_action :set_event_date, only: [:show]
 
-  # GET /api/event_dates/1
-  def show
-    render json: @event_date
-  end
+    # GET /api/event_dates/1
+    def show
+      render json:
+        ActiveModelSerializers::SerializableResource.new(@event_date).as_json
+    end
 
-  private
+    private
 
-  def set_event_date
-    @event_date = EventDate.find(params[:id])
+    def set_event_date
+      @event_date = EventDate.find(params[:id])
+    end
   end
 end
