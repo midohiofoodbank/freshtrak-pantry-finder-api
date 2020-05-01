@@ -78,6 +78,7 @@ describe Api::AgenciesController, type: :controller do
                 {
                   id: event_date.id,
                   event_id: event.id,
+                  capacity: 25,
                   start_time: '9:30 AM',
                   end_time: '10 PM',
                   date: date
