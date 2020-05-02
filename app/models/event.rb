@@ -3,7 +3,8 @@
 # Physical event at a location
 class Event < ApplicationRecord
   alias_attribute :id, :event_id
-  attribute :estimated_distance, :float, default: -> { 0.0 }
+  alias_attribute :lat, :pt_latitude
+  alias_attribute :long, :pt_longitude
 
   belongs_to :agency, foreign_key: :loc_id, inverse_of: :events
   belongs_to :service_type, foreign_key: :service_id, inverse_of: :events
@@ -20,13 +21,5 @@ class Event < ApplicationRecord
 
   def service_description
     service_category.service_category_name
-  end
-
-  # method to populate estimated_ distance virtual attribute
-  # called from serializer and controller rspec
-  def estimated_distance(loc_lat, loc_long)
-    return '' if loc_lat.nil? || loc_long.nil?
-
-    Geo.dist_btn_coords(loc_lat, loc_long, pt_latitude, pt_longitude)
   end
 end

@@ -53,7 +53,7 @@ describe Api::AgenciesController, type: :controller do
     expect(response_body).to eq(expected_response(request_params))
   end
 
-  def expected_response(rq_prms)
+  def expected_response(request_params)
     {
       agencies: [
         {
@@ -65,6 +65,10 @@ describe Api::AgenciesController, type: :controller do
           phone: agency.phone,
           name: agency.loc_name,
           nickname: agency.loc_nickname,
+          estimated_distance: Geo.distance_between(
+            user_location(request_params,
+                          event_zip_code.zip_code), agency
+          ),
           events: [
             {
               id: event.id,
@@ -77,9 +81,10 @@ describe Api::AgenciesController, type: :controller do
               agency_id: event.loc_id,
               name: event.event_name,
               service: event.service_description,
-              estimated_distance: event.estimated_distance(
-                loc_lat(rq_prms, event_zip_code.zip_code),
-                loc_long(rq_prms, event_zip_code.zip_code)
+              estimated_distance: Geo.distance_between(
+                user_location(request_params,
+                              event_zip_code.zip_code),
+                event
               ),
               event_dates: [
                 {
@@ -97,13 +102,9 @@ describe Api::AgenciesController, type: :controller do
     }
   end
 
-  # Supply lat/long from the zip code to call the model distance
-  # method.
-  def loc_lat(rq_prms, zip_code)
-    rq_prms.to_s.include?('zip_code') ? Geo.zip_lat(zip_code) : nil
-  end
+  def user_location(request_params, zip_code)
+    return nil unless request_params.to_s.include?(zip_code)
 
-  def loc_long(rq_prms, zip_code)
-    rq_prms.to_s.include?('zip_code') ? Geo.zip_long(zip_code) : nil
+    ::ZipCode.find_by(zip_code: zip_code)
   end
 end

@@ -3,21 +3,56 @@
 # Shared geographic calculations
 module Geo
   class << self
-    # calculates distance between two coordinates
-    # abstracted from Geocoder
-    def dist_btn_coords(lat1, long1, lat2, long2)
-      Geocoder::Calculations.distance_between([lat1, long1],
-                                              [lat2, long2]).round(2)
+    ##
+    # Distance Between two location objects
+    #
+    # Accepts two objects of any type that contain a
+    # lat and long method.
+    #   location        object
+    #   other_location  object
+    #
+    # Returns the distance between these two objects
+    def distance_between(location, other_location)
+      return '' if location.nil? || other_location.nil?
+
+      haversine_distance_between(location.lat,
+                                 location.long,
+                                 other_location.lat,
+                                 other_location.long, true)
     end
 
-    # returns latitude for zip_code centroid coordinate
-    def zip_lat(zip_code)
-      ZipCode.find_by(zip_code: zip_code).latitude.to_f
+    ##
+    # Haversine Distance Calculation
+    #
+    # Accepts the latitude and longitude of two locations
+    #   lat1  float
+    #   lon1  float
+    #   lat2  float
+    #   lon2  float
+    #
+    # Returns the distance between these two
+    # points in either miles or kilometers
+    def haversine_distance_between(lat1, lon1, lat2, lon2, miles)
+      # Calculate radial arcs for latitude and longitude
+      d_lat = (lat2 - lat1) * Math::PI / 180
+      d_lon = (lon2 - lon1) * Math::PI / 180
+
+      haversine_a = haversine_a(d_lat, d_lon, lat1, lat2)
+
+      c = haversine_c(haversine_a)
+
+      (6371 * c * (miles ? 1 / 1.6 : 1)).round(2)
     end
 
-    # returns longitude for zip_code centroid coordinate
-    def zip_long(zip_code)
-      ZipCode.find_by(zip_code: zip_code).longitude.to_f
+    def haversine_a(d_lat, d_lon, lat1, lat2)
+      Math.sin(d_lat / 2)**2 +
+        Math.cos(lat1 * Math::PI / 180) *
+        Math.sin(d_lon / 2)**2 *
+        Math.cos(lat2 * Math::PI / 180)
+    end
+
+    def haversine_c(haversine_a)
+      2 * Math.atan2(Math.sqrt(haversine_a), Math.sqrt(1 - haversine_a))
     end
   end
 end
