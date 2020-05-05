@@ -54,5 +54,12 @@ module Geo
     def haversine_c(haversine_a)
       2 * Math.atan2(Math.sqrt(haversine_a), Math.sqrt(1 - haversine_a))
     end
+
+    def validate_coordinate_values(lat, long)
+      return false unless (lat >= -90 && lat <= 90) &&
+                          (long >= -180 && long <= 180)
+
+      true
+    end
   end
 end

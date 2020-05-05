@@ -53,6 +53,33 @@ describe Api::AgenciesController, type: :controller do
     expect(response_body).to eq(expected_response(request_params))
   end
 
+  it 'is indexable by zip_code and includes lat & long params' do
+    get '/api/agencies', zip_code: event_zip_code.zip_code, lat: event.lat.to_s,
+                         long: event.long.to_s
+    request_params = request.params.query_params
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body).deep_symbolize_keys
+    expect(response_body).to eq(expected_response(request_params))
+  end
+
+  it 'is indexable by event_date and includes lat & long params' do
+    get '/api/agencies', event_date: date, lat: event.lat.to_s,
+                         long: event.long.to_s
+    request_params = request.params.query_params
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body).deep_symbolize_keys
+    expect(response_body).to eq(expected_response(request_params))
+  end
+
+  it 'is indexable by event_date and zip_code and includes lat & long params' do
+    get '/api/agencies', zip_code: event_zip_code.zip_code, event_date: date,
+                         lat: event.lat.to_s, long: event.long.to_s
+    request_params = request.params.query_params
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body).deep_symbolize_keys
+    expect(response_body).to eq(expected_response(request_params))
+  end
+
   def expected_response(request_params)
     {
       agencies: [
@@ -67,7 +94,7 @@ describe Api::AgenciesController, type: :controller do
           nickname: agency.loc_nickname,
           estimated_distance: Geo.distance_between(
             user_location(request_params,
-                          event_zip_code.zip_code), agency
+                          event_zip_code.zip_code, event), agency
           ),
           events: [
             {
@@ -83,8 +110,7 @@ describe Api::AgenciesController, type: :controller do
               service: event.service_description,
               estimated_distance: Geo.distance_between(
                 user_location(request_params,
-                              event_zip_code.zip_code),
-                event
+                              event_zip_code.zip_code, event), event
               ),
               event_dates: [
                 {
@@ -102,9 +128,16 @@ describe Api::AgenciesController, type: :controller do
     }
   end
 
-  def user_location(request_params, zip_code)
-    return nil unless request_params.to_s.include?(zip_code)
+  def user_location(request_params, zip_code, event)
+    return nil unless request_params.to_s.include?(zip_code) ||
+                      (request_params.to_s.include?(event.lat.to_s) &&
+                       request_params.to_s.include?(event.long.to_s))
 
-    ::ZipCode.find_by(zip_code: zip_code)
+    if request_params.to_s.include?(event.lat.to_s) &&
+       request_params.to_s.include?(event.long.to_s)
+      OpenStruct.new(lat: event.lat, long: event.long)
+    else
+      ::ZipCode.find_by(zip_code: zip_code)
+    end
   end
 end
