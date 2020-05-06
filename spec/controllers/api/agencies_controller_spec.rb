@@ -80,6 +80,23 @@ describe Api::AgenciesController, type: :controller do
     expect(response_body).to eq(expected_response(request_params))
   end
 
+  it 'is indexable by zip_code and includes non-numeric lat & long params' do
+    get '/api/agencies', zip_code: event_zip_code.zip_code, lat: 'dog',
+                         long: 'cat'
+    request_params = request.params.query_params
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body).deep_symbolize_keys
+    expect(response_body).to eq(expected_response(request_params))
+  end
+
+  it 'is indexable by event_date and includes invalid lat & long params' do
+    get '/api/agencies', event_date: date, lat: '100.1', long: '-190.9'
+    request_params = request.params.query_params
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body).deep_symbolize_keys
+    expect(response_body).to eq(expected_response(request_params))
+  end
+
   def expected_response(request_params)
     {
       agencies: [
@@ -93,8 +110,7 @@ describe Api::AgenciesController, type: :controller do
           name: agency.loc_name,
           nickname: agency.loc_nickname,
           estimated_distance: Geo.distance_between(
-            user_location(request_params,
-                          event_zip_code.zip_code, event), agency
+            user_location(request_params), agency
           ),
           events: [
             {
@@ -109,8 +125,7 @@ describe Api::AgenciesController, type: :controller do
               name: event.event_name,
               service: event.service_description,
               estimated_distance: Geo.distance_between(
-                user_location(request_params,
-                              event_zip_code.zip_code, event), event
+                user_location(request_params), event
               ),
               event_dates: [
                 {
@@ -128,16 +143,27 @@ describe Api::AgenciesController, type: :controller do
     }
   end
 
-  def user_location(request_params, zip_code, event)
-    return nil unless request_params.to_s.include?(zip_code) ||
-                      (request_params.to_s.include?(event.lat.to_s) &&
-                       request_params.to_s.include?(event.long.to_s))
+  def user_location(request_params)
+    return nil unless request_params.to_s.include?(':zip_code') ||
+                      (request_params.to_s.include?(':lat') &&
+                       request_params.to_s.include?(':long'))
 
-    if request_params.to_s.include?(event.lat.to_s) &&
-       request_params.to_s.include?(event.long.to_s)
-      OpenStruct.new(lat: event.lat, long: event.long)
-    else
-      ::ZipCode.find_by(zip_code: zip_code)
+    if valid_location(request_params)
+      OpenStruct.new(lat: request_params[:lat].to_f,
+                     long: request_params[:long].to_f)
+    elsif request_params.to_s.include?(':zip_code')
+      ::ZipCode.find_by(zip_code: request_params[:zip_code])
     end
+  end
+
+  def valid_location(request_params)
+    return true if request_params.to_s.include?(':lat') &&
+                   request_params.to_s.include?(':long') &&
+                   request_params[:lat].numeric? &&
+                   request_params[:long].numeric? &&
+                   Geo.validate_coordinate_values(request_params[:lat].to_f,
+                                                  request_params[:long].to_f)
+
+    false
   end
 end
