@@ -31,73 +31,73 @@ describe Api::AgenciesController, type: :controller do
 
   it 'is indexable by zip_code' do
     get '/api/agencies', zip_code: event_zip_code.zip_code
-    request_params = request.params.query_params
+    query_params = request.params.query_params
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response(request_params))
+    expect(response_body).to eq(expected_response(query_params))
   end
 
   it 'is indexable by event_date' do
     get '/api/agencies', event_date: date
-    request_params = request.params.query_params
+    query_params = request.params.query_params
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response(request_params))
+    expect(response_body).to eq(expected_response(query_params))
   end
 
   it 'is indexable by zip_code and event_date' do
     get '/api/agencies', zip_code: event_zip_code.zip_code, event_date: date
-    request_params = request.params.query_params
+    query_params = request.params.query_params
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response(request_params))
+    expect(response_body).to eq(expected_response(query_params))
   end
 
   it 'is indexable by zip_code and includes lat & long params' do
     get '/api/agencies', zip_code: event_zip_code.zip_code, lat: event.lat.to_s,
                          long: event.long.to_s
-    request_params = request.params.query_params
+    query_params = request.params.query_params
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response(request_params))
+    expect(response_body).to eq(expected_response(query_params))
   end
 
   it 'is indexable by event_date and includes lat & long params' do
     get '/api/agencies', event_date: date, lat: event.lat.to_s,
                          long: event.long.to_s
-    request_params = request.params.query_params
+    query_params = request.params.query_params
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response(request_params))
+    expect(response_body).to eq(expected_response(query_params))
   end
 
   it 'is indexable by event_date and zip_code and includes lat & long params' do
     get '/api/agencies', zip_code: event_zip_code.zip_code, event_date: date,
                          lat: event.lat.to_s, long: event.long.to_s
-    request_params = request.params.query_params
+    query_params = request.params.query_params
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response(request_params))
+    expect(response_body).to eq(expected_response(query_params))
   end
 
   it 'is indexable by zip_code and includes non-numeric lat & long params' do
     get '/api/agencies', zip_code: event_zip_code.zip_code, lat: 'dog',
                          long: 'cat'
-    request_params = request.params.query_params
+    query_params = request.params.query_params
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response(request_params))
+    expect(response_body).to eq(expected_response(query_params))
   end
 
   it 'is indexable by event_date and includes invalid lat & long params' do
     get '/api/agencies', event_date: date, lat: '100.1', long: '-190.9'
-    request_params = request.params.query_params
+    query_params = request.params.query_params
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response(request_params))
+    expect(response_body).to eq(expected_response(query_params))
   end
 
-  def expected_response(request_params)
+  def expected_response(query_params)
     {
       agencies: [
         {
@@ -110,7 +110,7 @@ describe Api::AgenciesController, type: :controller do
           name: agency.loc_name,
           nickname: agency.loc_nickname,
           estimated_distance: Geo.distance_between(
-            user_location(request_params), agency
+            user_location(query_params), agency
           ),
           events: [
             {
@@ -125,7 +125,7 @@ describe Api::AgenciesController, type: :controller do
               name: event.event_name,
               service: event.service_description,
               estimated_distance: Geo.distance_between(
-                user_location(request_params), event
+                user_location(query_params), event
               ),
               event_dates: [
                 {
@@ -143,26 +143,26 @@ describe Api::AgenciesController, type: :controller do
     }
   end
 
-  def user_location(request_params)
-    return nil unless request_params.to_s.include?(':zip_code') ||
-                      (request_params.to_s.include?(':lat') &&
-                       request_params.to_s.include?(':long'))
+  def user_location(query_params)
+    return nil unless query_params.to_s.include?(':zip_code') ||
+                      (query_params.to_s.include?(':lat') &&
+                       query_params.to_s.include?(':long'))
 
-    if valid_location(request_params)
-      OpenStruct.new(lat: request_params[:lat].to_f,
-                     long: request_params[:long].to_f)
-    elsif request_params.to_s.include?(':zip_code')
-      ::ZipCode.find_by(zip_code: request_params[:zip_code])
+    if valid_location(query_params)
+      OpenStruct.new(lat: query_params[:lat].to_f,
+                     long: query_params[:long].to_f)
+    elsif query_params.to_s.include?(':zip_code')
+      ::ZipCode.find_by(zip_code: query_params[:zip_code])
     end
   end
 
-  def valid_location(request_params)
-    return true if request_params.to_s.include?(':lat') &&
-                   request_params.to_s.include?(':long') &&
-                   request_params[:lat].numeric? &&
-                   request_params[:long].numeric? &&
-                   Geo.validate_coordinate_values(request_params[:lat].to_f,
-                                                  request_params[:long].to_f)
+  def valid_location(query_params)
+    return true if query_params.to_s.include?(':lat') &&
+                   query_params.to_s.include?(':long') &&
+                   query_params[:lat].numeric? &&
+                   query_params[:long].numeric? &&
+                   Geo.validate_coordinate_values(query_params[:lat].to_f,
+                                                  query_params[:long].to_f)
 
     false
   end
