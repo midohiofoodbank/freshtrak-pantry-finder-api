@@ -2,10 +2,11 @@
 
 # Serializer to strip away the cruft in the foodbanks table
 class FoodbankSerializer < ActiveModel::Serializer
-  attributes :address, :city, :state, :zip
+  attributes :id, :address, :city, :state, :zip
   attribute  :phone_public_help, key: :phone
   attribute :fb_name, key: :name
   attribute :fb_nickname, key: :nickname
+  attribute :fb_logo, key: :logo
   attributes :display_url, :fb_agency_locator_url, :fb_url, :fb_fano_url
 
   def address

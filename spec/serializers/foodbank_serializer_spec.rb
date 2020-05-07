@@ -9,13 +9,13 @@ describe FoodbankSerializer do
                      phone_public_help: '999-999-9999')
       )
 
-    exp_rslt = '{"address":"addr 1","city":"the town","state":"OH",' \
-               '"zip":"12345","phone":"999-999-9999",'\
-               '"name":"local foodbank","nickname":null,"display_url":"' \
-               "#{Config.default_fb_display_url}" \
-               '","fb_agency_locator_url":null,"fb_url":null,' \
-               '"fb_fano_url":null}'
-
+    exp_rslt = '{"id":null,"address":"addr 1","city":"the town",' \
+                 '"state":"OH","zip":"12345","phone":"999-999-9999",' \
+                 '"name":"local foodbank","nickname":null,' \
+                 '"logo":null,"display_url":"' \
+                 "#{Config.default_fb_display_url}" \
+                 '","fb_agency_locator_url":null,"fb_url":null,' \
+                 '"fb_fano_url":null}'
     expect(serializer.to_json).to eql(exp_rslt)
   end
 
@@ -27,14 +27,13 @@ describe FoodbankSerializer do
                      zip: '12345', phone_public_help: '999-999-9999')
       )
 
-    exp_rslt = '{"address":"addr 1 addr 2","city":"the town","state":"OH",' \
-                 '"zip":"12345","phone":"999-999-9999",' \
+    exp_rslt = '{"id":null,"address":"addr 1 addr 2","city":"the town",' \
+                 '"state":"OH","zip":"12345","phone":"999-999-9999",' \
                  '"name":"local foodbank","nickname":null,' \
-                 '"display_url":"' \
+                 '"logo":null,"display_url":"' \
                  "#{Config.default_fb_display_url}" \
                  '","fb_agency_locator_url":null,' \
                  '"fb_url":null,"fb_fano_url":null}'
-
     expect(serializer.to_json).to eql(exp_rslt)
   end
 
@@ -48,13 +47,12 @@ describe FoodbankSerializer do
                      fb_agency_locator_url: 'fb_agency_locator_url')
       )
 
-    exp_rslt = '{"address":"addr 1 addr 2","city":"the town","state":"OH",' \
-                 '"zip":"12345","phone":"999-999-9999",' \
+    exp_rslt = '{"id":null,"address":"addr 1 addr 2","city":"the town",' \
+                 '"state":"OH","zip":"12345","phone":"999-999-9999",' \
                  '"name":"local foodbank","nickname":null,' \
-                 '"display_url":"fb_agency_locator_url",' \
+                 '"logo":null,"display_url":"fb_agency_locator_url",' \
                  '"fb_agency_locator_url":"fb_agency_locator_url",'\
                  '"fb_url":null,"fb_fano_url":null}'
-
     expect(serializer.to_json).to eql(exp_rslt)
   end
 
@@ -67,12 +65,11 @@ describe FoodbankSerializer do
                      fb_url: 'fb_url')
       )
 
-    exp_rslt = '{"address":"addr 1 addr 2","city":"the town","state":"OH",' \
-                 '"zip":"12345","phone":"999-999-9999",' \
-                 '"name":"local foodbank","nickname":null,' \
+    exp_rslt = '{"id":null,"address":"addr 1 addr 2","city":"the town",' \
+                 '"state":"OH","zip":"12345","phone":"999-999-9999",' \
+                 '"name":"local foodbank","nickname":null,"logo":null,' \
                  '"display_url":"fb_url","fb_agency_locator_url":null,' \
                  '"fb_url":"fb_url","fb_fano_url":null}'
-
     expect(serializer.to_json).to eql(exp_rslt)
   end
 
@@ -85,10 +82,10 @@ describe FoodbankSerializer do
                      fb_fano_url: 'fb_fano_url')
       )
 
-    exp_rslt = '{"address":"addr 1 addr 2","city":"the town",' \
-                 '"state":"OH","zip":"12345",' \
-                 '"phone":"999-999-9999","name":"local foodbank",' \
-                 '"nickname":null,"display_url":"fb_fano_url",' \
+    exp_rslt = '{"id":null,"address":"addr 1 addr 2","city":"the town",' \
+                 '"state":"OH","zip":"12345","phone":"999-999-9999",' \
+                 '"name":"local foodbank","nickname":null,"logo":null,' \
+                 '"display_url":"fb_fano_url",' \
                  '"fb_agency_locator_url":null,"fb_url":null,' \
                  '"fb_fano_url":"fb_fano_url"}'
     expect(serializer.to_json).to eql(exp_rslt)
