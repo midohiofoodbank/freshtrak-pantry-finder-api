@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# require 'ext/string.rb'
-
 Jets.application.configure do
   config.project_name = 'pantry-finder-api'
   config.mode = 'api'

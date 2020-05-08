@@ -4,9 +4,9 @@ module Api
   # Exposes the Agency location data
   class AgenciesController < ApplicationController
     before_action :set_agencies, only: [:index]
+    before_action :set_user_location, only: [:index]
 
     def index
-      user_location
       if (zip = search_params[:zip_code])
         @agencies = @agencies.by_zip_code(zip)
       end
@@ -32,39 +32,24 @@ module Api
         end
     end
 
-    # user_location loads the objects used to return distance.
+    # set_user_location loads the objects used to return distance.
     # Valid :lat :long parameters will take precedence over the
     # :zip_code paramter (used to calculate distance from the zip code
     # (centroid)
-    def user_location
+    def set_user_location
       return unless (search_params[:lat] && search_params[:long]) ||
                     search_params[:zip_code]
 
-      user_location_lat_long(search_params[:lat], search_params[:long])
-      return if @user_location
-
-      user_location_zip
+      user_location_object(search_params[:lat], search_params[:long],
+                           search_params[:zip_code])
     end
 
-    def user_location_lat_long(lat, long)
-      return unless lat && long
-
-      return unless validate_coordinate(lat, long) == true
-
-      @user_location = OpenStruct.new(lat: lat.to_f,
-                                      long: long.to_f)
-    end
-
-    def user_location_zip
-      return unless search_params[:zip_code]
-
-      @user_location = ZipCode.find_by(zip_code: search_params[:zip_code])
-    end
-
-    def validate_coordinate(lat, long)
-      return false unless lat.numeric? == true && long.numeric? == true
-
-      Geo.validate_coordinate_values(lat.to_f, long.to_f)
+    def user_location_object(lat, long, zip_code)
+      if Geo.valid_coordinate(lat, long)
+        @user_location = OpenStruct.new(lat: lat.to_f, long: long.to_f)
+      elsif zip_code
+        @user_location = ZipCode.find_by(zip_code: zip_code)
+      end
     end
 
     def serialized_agencies

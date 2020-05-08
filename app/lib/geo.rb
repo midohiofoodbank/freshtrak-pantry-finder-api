@@ -55,6 +55,13 @@ module Geo
       2 * Math.atan2(Math.sqrt(haversine_a), Math.sqrt(1 - haversine_a))
     end
 
+    def valid_coordinate(lat, long)
+      return false unless lat && long && StringUtils.numeric?(lat) == true &&
+                          StringUtils.numeric?(long) == true
+
+      validate_coordinate_values(lat.to_f, long.to_f)
+    end
+
     def validate_coordinate_values(lat, long)
       return false unless (lat >= -90 && lat <= 90) &&
                           (long >= -180 && long <= 180)

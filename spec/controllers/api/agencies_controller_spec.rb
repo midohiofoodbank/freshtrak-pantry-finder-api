@@ -160,11 +160,7 @@ describe Api::AgenciesController, type: :controller do
   def valid_location(query_params)
     return true if query_params.to_s.include?(':lat') &&
                    query_params.to_s.include?(':long') &&
-                   query_params[:lat].numeric? &&
-                   query_params[:long].numeric? &&
-                   Geo.validate_coordinate_values(query_params[:lat].to_f,
-                                                  query_params[:long].to_f)
-
-    false
+                   Geo.valid_coordinate(query_params[:lat],
+                                        query_params[:long])
   end
 end
