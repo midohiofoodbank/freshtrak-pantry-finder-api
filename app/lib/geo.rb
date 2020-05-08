@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Shared geographic calculations
+# Shared geographic calculations and validations
 module Geo
   class << self
     ##
@@ -13,7 +13,8 @@ module Geo
     #
     # Returns the distance between these two objects
     def distance_between(location, other_location)
-      return '' if location.nil? || other_location.nil?
+      return '' if location.nil? || other_location.nil? ||
+                   !valid_locations(location, other_location)
 
       haversine_distance_between(location.lat,
                                  location.long,
@@ -55,14 +56,23 @@ module Geo
       2 * Math.atan2(Math.sqrt(haversine_a), Math.sqrt(1 - haversine_a))
     end
 
+    def valid_locations(location, other_location)
+      return false unless valid_coordinate(location.lat.to_s,
+                                           location.long.to_s) &&
+                          valid_coordinate(other_location.lat.to_s,
+                                           other_location.long.to_s)
+
+      true
+    end
+
     def valid_coordinate(lat, long)
       return false unless lat && long && StringUtils.numeric?(lat) == true &&
                           StringUtils.numeric?(long) == true
 
-      validate_coordinate_values(lat.to_f, long.to_f)
+      valid_coordinate_values(lat.to_f, long.to_f)
     end
 
-    def validate_coordinate_values(lat, long)
+    def valid_coordinate_values(lat, long)
       return false unless (lat >= -90 && lat <= 90) &&
                           (long >= -180 && long <= 180)
 
