@@ -5,6 +5,8 @@ class Agency < ApplicationRecord
   self.table_name = 'locations'
 
   alias_attribute :id, :loc_id
+  alias_attribute :lat, :pt_latitude
+  alias_attribute :long, :pt_longitude
 
   belongs_to :foodbank, foreign_key: :primary_fb_id,
                         inverse_of: :agencies

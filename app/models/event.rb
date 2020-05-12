@@ -3,6 +3,8 @@
 # Physical event at a location
 class Event < ApplicationRecord
   alias_attribute :id, :event_id
+  alias_attribute :lat, :pt_latitude
+  alias_attribute :long, :pt_longitude
 
   belongs_to :agency, foreign_key: :loc_id, inverse_of: :events
   belongs_to :service_type, foreign_key: :service_id, inverse_of: :events
