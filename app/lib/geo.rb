@@ -33,50 +33,36 @@ module Geo
     #
     # Returns the distance between these two
     # points in either miles or kilometers
+    # rubocop:disable Metrics/AbcSize
     def haversine_distance_between(lat1, lon1, lat2, lon2, miles)
       # Calculate radial arcs for latitude and longitude
       d_lat = (lat2 - lat1) * Math::PI / 180
       d_lon = (lon2 - lon1) * Math::PI / 180
 
-      haversine_a = haversine_a(d_lat, d_lon, lat1, lat2)
+      a = Math.sin(d_lat / 2)**2 +
+          Math.cos(lat1 * Math::PI / 180) *
+          Math.sin(d_lon / 2)**2 *
+          Math.cos(lat2 * Math::PI / 180)
 
-      c = haversine_c(haversine_a)
+      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 
       (6371 * c * (miles ? 1 / 1.6 : 1)).round(2)
     end
-
-    def haversine_a(d_lat, d_lon, lat1, lat2)
-      Math.sin(d_lat / 2)**2 +
-        Math.cos(lat1 * Math::PI / 180) *
-        Math.sin(d_lon / 2)**2 *
-        Math.cos(lat2 * Math::PI / 180)
-    end
-
-    def haversine_c(haversine_a)
-      2 * Math.atan2(Math.sqrt(haversine_a), Math.sqrt(1 - haversine_a))
-    end
+    # rubocop:enable Metrics/AbcSize
 
     def valid_locations(location, other_location)
-      return false unless valid_coordinate(location.lat.to_s,
-                                           location.long.to_s) &&
-                          valid_coordinate(other_location.lat.to_s,
-                                           other_location.long.to_s)
-
-      true
+      valid_coordinate(location.lat.to_s, location.long.to_s) &&
+        valid_coordinate(other_location.lat.to_s, other_location.long.to_s)
     end
 
     def valid_coordinate(lat, long)
-      return false unless lat && long && StringUtils.numeric?(lat) == true &&
-                          StringUtils.numeric?(long) == true
-
-      valid_coordinate_values(lat.to_f, long.to_f)
+      lat && long &&
+        StringUtils.numeric?(lat) && StringUtils.numeric?(long) &&
+        valid_coordinate_values(lat.to_f, long.to_f)
     end
 
     def valid_coordinate_values(lat, long)
-      return false unless (lat >= -90 && lat <= 90) &&
-                          (long >= -180 && long <= 180)
-
-      true
+      (lat >= -90 && lat <= 90) && (long >= -180 && long <= 180)
     end
   end
 end
