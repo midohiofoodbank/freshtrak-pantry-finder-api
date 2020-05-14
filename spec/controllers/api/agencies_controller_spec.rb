@@ -136,11 +136,4 @@ describe Api::AgenciesController, type: :controller do
       ]
     }
   end
-
-  def exception_note(event)
-    exception_note = EventGeography.exception_notes_hash.key(event.id)
-    return '' if exception_note.nil?
-
-    exception_note
-  end
 end
