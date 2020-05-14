@@ -10,6 +10,8 @@ class EventZipCode < ApplicationRecord
   alias_attribute :zip_code, :geo_value
 
   belongs_to :event, foreign_key: :event_id, inverse_of: :event_zip_codes
+  belongs_to :event_geography, foreign_key: :egp_id,
+                               inverse_of: :event_zip_codes
   has_one :agency, through: :event
 
   default_scope { zip_code_type.active }

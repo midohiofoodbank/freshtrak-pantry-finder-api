@@ -7,6 +7,10 @@ describe EventZipCode, type: :model do
     expect(event_zip_code.event).to be_an_instance_of(Event)
   end
 
+  it 'belongs to an event_geography' do
+    expect(event_zip_code.event_geography).to be_an_instance_of(EventGeography)
+  end
+
   it 'has one agency' do
     expect(event_zip_code.agency).to be_an_instance_of(Agency)
   end

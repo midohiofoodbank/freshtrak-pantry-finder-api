@@ -119,6 +119,7 @@ describe Api::AgenciesController, type: :controller do
               estimated_distance: Geo.distance_between(
                 OpenStruct.new(lat: lat, long: long), event
               ),
+              exception_note: '',
               event_dates: [
                 {
                   id: event_date.id,
@@ -134,5 +135,12 @@ describe Api::AgenciesController, type: :controller do
         }
       ]
     }
+  end
+
+  def exception_note(event)
+    exception_note = EventGeography.exception_notes_hash.key(event.id)
+    return '' if exception_note.nil?
+
+    exception_note
   end
 end
