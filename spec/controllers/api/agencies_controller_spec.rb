@@ -5,8 +5,10 @@ describe Api::AgenciesController, type: :controller do
   let(:date) { (Date.today + 5).to_s }
   let(:agency) { create(:agency) }
   let(:event) { create(:event, agency: agency) }
+  let(:event_geography) { create(:event_geography, event_id: event.event_id) }
   let!(:event_zip_code) do
-    create(:event_zip_code, event: event, zip_code: zip_code.zip_code)
+    create(:event_zip_code, event: event, zip_code: zip_code.zip_code,
+                            event_geography: event_geography)
   end
   let!(:event_date) do
     create(:event_date, event: event, date: date.delete('-'),
@@ -119,7 +121,7 @@ describe Api::AgenciesController, type: :controller do
               estimated_distance: Geo.distance_between(
                 OpenStruct.new(lat: lat, long: long), event
               ),
-              exception_note: '',
+              exception_note: 'local restrictions apply',
               event_dates: [
                 {
                   id: event_date.id,

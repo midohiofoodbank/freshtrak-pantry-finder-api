@@ -12,6 +12,8 @@ class EventGeography < ApplicationRecord
   default_scope { active }
   scope :active, -> { where(status_id: 1) }
 
+  # returns a hash including all exception_note event_id pairs
+  # that meet the criteria for displaying an exception_note
   def self.exception_notes_hash
     EventGeography.joins(:event_zip_codes)
                   .where(event_service_geographies:
