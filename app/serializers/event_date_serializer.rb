@@ -3,6 +3,7 @@
 # Serializer to strip away the cruft in the event_dates table
 class EventDateSerializer < ActiveModel::Serializer
   attributes :id, :event_id, :capacity
+  attributes :accept_walkin, :accept_reservations, :accept_interest
 
   attribute :start_time do
     start_time = object.start_time_key.to_s
