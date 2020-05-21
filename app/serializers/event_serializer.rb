@@ -31,8 +31,6 @@ class EventSerializer < ActiveModel::Serializer
   end
 
   def event_details
-    return '' if object.pub_desc_long.nil?
-
-    object.pub_desc_long
+    object.pub_desc_long || ''
   end
 end
