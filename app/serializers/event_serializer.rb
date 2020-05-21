@@ -9,6 +9,7 @@ class EventSerializer < ActiveModel::Serializer
   attribute :event_name, key: :name
   attribute :service_description, key: :service
   attribute :estimated_distance
+  attribute :event_details
 
   has_many :event_dates
 
@@ -27,5 +28,9 @@ class EventSerializer < ActiveModel::Serializer
     return '' if user_location.nil?
 
     Geo.distance_between(user_location, object)
+  end
+
+  def event_details
+    object.pub_desc_long || ''
   end
 end
