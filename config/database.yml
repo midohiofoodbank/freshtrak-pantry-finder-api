@@ -19,8 +19,8 @@ test:
 
 beta:
   <<: *default
-  database: freshtrak_public
+  database: <%= ENV['DB_NAME'] || 'freshtrak_public' %>
 
 production:
   <<: *default
-  database: freshtrak_public
+  database: <%= ENV['DB_NAME'] || 'freshtrak_public' %>
