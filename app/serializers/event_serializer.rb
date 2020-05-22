@@ -8,8 +8,7 @@ class EventSerializer < ActiveModel::Serializer
   attribute :pt_longitude, key: :longitude
   attribute :event_name, key: :name
   attribute :service_description, key: :service
-  attribute :estimated_distance
-  attribute :exception_note
+  attributes :estimated_distance, :exception_note, :event_details
 
   has_many :event_dates
 
@@ -31,10 +30,13 @@ class EventSerializer < ActiveModel::Serializer
   end
 
   def exception_note
-    exception_notes_hash = @instance_options[:exception_notes_hash]
-    return '' if exception_notes_hash.nil? ||
-                 exception_notes_hash.key(object.id).nil?
+    exception_notes = EventZipCode.exception_note(@instance_options[:zip_code],
+                                                  object.id)
+    # Only expecting one exeption_note
+    exception_notes[0] || ''
+  end
 
-    exception_notes_hash.key(object.id)
+  def event_details
+    object.pub_desc_long || ''
   end
 end

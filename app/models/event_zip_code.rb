@@ -17,4 +17,11 @@ class EventZipCode < ApplicationRecord
   default_scope { zip_code_type.active }
   scope :zip_code_type, -> { where(geo_type_id: 1) }
   scope :active, -> { where(status_id: 1) }
+
+  def self.exception_note(zip_code, event_id)
+    EventZipCode.joins(:event_geography)
+                .where(trigger_exception_note: 1, geo_value: zip_code,
+                       event_id: event_id)
+                .pluck(:exception_note)
+  end
 end

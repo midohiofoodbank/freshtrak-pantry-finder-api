@@ -121,7 +121,8 @@ describe Api::AgenciesController, type: :controller do
               estimated_distance: Geo.distance_between(
                 OpenStruct.new(lat: lat, long: long), event
               ),
-              exception_note: 'local restrictions apply',
+              exception_note: '',
+              event_details: event.pub_desc_long,
               event_dates: [
                 {
                   id: event_date.id,
@@ -129,7 +130,10 @@ describe Api::AgenciesController, type: :controller do
                   capacity: 25,
                   start_time: '9:30 AM',
                   end_time: '10 PM',
-                  date: date
+                  date: date,
+                  accept_walkin: 1,
+                  accept_reservations: 1,
+                  accept_interest: 1
                 }
               ]
             }

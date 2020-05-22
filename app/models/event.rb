@@ -13,6 +13,8 @@ class Event < ApplicationRecord
                              dependent: :restrict_with_exception
   has_many :event_dates, foreign_key: :event_id, inverse_of: :event,
                          dependent: :restrict_with_exception
+  has_many :event_geographies, foreign_key: :event_id, inverse_of: :event,
+                               dependent: :restrict_with_exception
 
   default_scope { active.published }
   scope :active, -> { where(status_id: 1) }
