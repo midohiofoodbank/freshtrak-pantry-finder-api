@@ -32,8 +32,8 @@ class EventSerializer < ActiveModel::Serializer
   def exception_note
     exception_notes = EventZipCode.exception_note(@instance_options[:zip_code],
                                                   object.id)
-    # Only expecting one exeption_note
-    exception_notes[0] || ''
+    # Only expecting one exception note
+    exception_notes || ''
   end
 
   def event_details

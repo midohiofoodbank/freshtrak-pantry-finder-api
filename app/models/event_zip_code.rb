@@ -22,6 +22,6 @@ class EventZipCode < ApplicationRecord
     EventZipCode.joins(:event_geography)
                 .where(trigger_exception_note: 1, geo_value: zip_code,
                        event_id: event_id)
-                .pluck(:exception_note)
+                .pluck(:exception_note)[0]
   end
 end
