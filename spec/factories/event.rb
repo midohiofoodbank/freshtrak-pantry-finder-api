@@ -28,6 +28,7 @@ FactoryBot.define do
     tamu_longitude { longitude }
     pt_latitude { latitude }
     pt_longitude { longitude }
+    pub_desc_long { 'long description' }
     utc_offset { 0 }
 
     agency
