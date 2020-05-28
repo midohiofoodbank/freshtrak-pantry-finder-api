@@ -8,8 +8,6 @@ class EventGeography < ApplicationRecord
 
   has_many :event_zip_codes, foreign_key: :egp_id, inverse_of: :event_geography,
                              dependent: :restrict_with_exception
-  has_one :event, foreign_key: :event_id, inverse_of: :event_service_geography,
-                  dependent: :restrict_with_exception
 
   default_scope { active }
   scope :active, -> { where(status_id: 1) }

@@ -5,7 +5,7 @@ describe Api::AgenciesController, type: :controller do
   let(:date) { (Date.today + 5).to_s }
   let(:agency) { create(:agency) }
   let(:event) { create(:event, agency: agency) }
-  let(:event_geography) { create(:event_geography, event_id: event.event_id) }
+  let(:event_geography) { create(:event_geography) }
   let!(:event_zip_code) do
     create(:event_zip_code, event: event, zip_code: zip_code.zip_code,
                             event_geography: event_geography)
@@ -121,7 +121,9 @@ describe Api::AgenciesController, type: :controller do
               estimated_distance: Geo.distance_between(
                 OpenStruct.new(lat: lat, long: long), event
               ),
-              exception_note: '',
+              exception_notes: Hash[
+                zip_code.zip_code.to_sym, [event_geography.exception_note]
+              ],
               event_details: event.pub_desc_long,
               event_dates: [
                 {

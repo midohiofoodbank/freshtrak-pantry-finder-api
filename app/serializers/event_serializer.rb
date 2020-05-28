@@ -8,7 +8,7 @@ class EventSerializer < ActiveModel::Serializer
   attribute :pt_longitude, key: :longitude
   attribute :event_name, key: :name
   attribute :service_description, key: :service
-  attributes :estimated_distance, :exception_note, :event_details
+  attributes :estimated_distance, :exception_notes, :event_details
 
   has_many :event_dates
 
@@ -27,13 +27,6 @@ class EventSerializer < ActiveModel::Serializer
     return '' if user_location.nil?
 
     Geo.distance_between(user_location, object)
-  end
-
-  def exception_note
-    exception_notes = EventZipCode.exception_note(@instance_options[:zip_code],
-                                                  object.id)
-    # Only expecting one exception note
-    exception_notes || ''
   end
 
   def event_details
