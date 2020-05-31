@@ -23,16 +23,9 @@ class Event < ApplicationRecord
     service_category.service_category_name
   end
 
-  def exception_notes
-    exception_notes = {}
-    event_zip_codes.each do |event_zip|
-      zip = event_zip.zip_code
-      exception_note = event_zip.exception_note
-      next unless exception_note
+  def exception_notes(zip_code)
+    return unless (event_zip = event_zip_codes.find_by(zip_code: zip_code))
 
-      exception_notes[zip] ||= []
-      exception_notes[zip] << exception_note
-    end
-    exception_notes
+    event_zip.exception_note
   end
 end

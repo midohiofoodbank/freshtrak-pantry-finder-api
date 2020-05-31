@@ -18,6 +18,12 @@ class EventSerializer < ActiveModel::Serializer
     "#{object.address1} #{object.address2}"
   end
 
+  def exception_notes
+    exception_note = object.exception_notes(@instance_options[:zip_code])
+
+    exception_note || ''
+  end
+
   # calculate estimated distance JSON field using the user
   # location and the model object location.  User location is
   # an object representing a location known by the user, e.g.,

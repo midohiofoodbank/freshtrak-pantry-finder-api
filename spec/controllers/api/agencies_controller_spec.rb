@@ -42,7 +42,7 @@ describe Api::AgenciesController, type: :controller do
     get '/api/agencies', event_date: date
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response)
+    expect(response_body).to eq(expected_response(nil, nil, false))
   end
 
   it 'is indexable by zip_code and event_date' do
@@ -65,7 +65,7 @@ describe Api::AgenciesController, type: :controller do
                          long: event.long.to_s
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response(event.lat, event.long))
+    expect(response_body).to eq(expected_response(event.lat, event.long, false))
   end
 
   it 'is indexable by event_date and zip_code and includes lat & long params' do
@@ -85,13 +85,13 @@ describe Api::AgenciesController, type: :controller do
   end
 
   it 'is indexable by event_date and includes invalid lat & long params' do
-    get '/api/agencies', event_date: date, lat: '100.1', long: '-190.9'
+    get '/api/agencies', event_date: date, lat: 100.1, long: -190.9
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
-    expect(response_body).to eq(expected_response)
+    expect(response_body).to eq(expected_response(100.1, -190.9, false))
   end
 
-  def expected_response(lat = nil, long = nil)
+  def expected_response(lat = nil, long = nil, has_zip = true)
     {
       agencies: [
         {
@@ -121,9 +121,7 @@ describe Api::AgenciesController, type: :controller do
               estimated_distance: Geo.distance_between(
                 OpenStruct.new(lat: lat, long: long), event
               ),
-              exception_notes: Hash[
-                zip_code.zip_code.to_sym, [event_geography.exception_note]
-              ],
+              exception_notes: has_zip ? event_geography.exception_note : '',
               event_details: event.pub_desc_long,
               event_dates: [
                 {
