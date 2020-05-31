@@ -13,8 +13,6 @@ class Event < ApplicationRecord
                              dependent: :restrict_with_exception
   has_many :event_dates, foreign_key: :event_id, inverse_of: :event,
                          dependent: :restrict_with_exception
-  has_many :event_geographies, foreign_key: :event_id, inverse_of: :event,
-                               dependent: :restrict_with_exception
 
   default_scope { active.published }
   scope :active, -> { where(status_id: 1) }
@@ -23,5 +21,18 @@ class Event < ApplicationRecord
 
   def service_description
     service_category.service_category_name
+  end
+
+  def exception_notes
+    exception_notes = {}
+    event_zip_codes.each do |event_zip|
+      zip = event_zip.zip_code
+      exception_note = event_zip.exception_note
+      next unless exception_note
+
+      exception_notes[zip] ||= []
+      exception_notes[zip] << exception_note
+    end
+    exception_notes
   end
 end
