@@ -8,7 +8,7 @@ class EventSerializer < ActiveModel::Serializer
   attribute :pt_longitude, key: :longitude
   attribute :event_name, key: :name
   attribute :service_description, key: :service
-  attributes :estimated_distance, :exception_notes, :event_details
+  attributes :estimated_distance, :exception_note, :event_details
 
   has_many :event_dates
 
@@ -18,8 +18,8 @@ class EventSerializer < ActiveModel::Serializer
     "#{object.address1} #{object.address2}"
   end
 
-  def exception_notes
-    exception_note = object.exception_notes(@instance_options[:zip_code])
+  def exception_note
+    exception_note = object.exception_note(@instance_options[:zip_code])
 
     exception_note || ''
   end

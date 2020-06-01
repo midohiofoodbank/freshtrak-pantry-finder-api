@@ -121,7 +121,7 @@ describe Api::AgenciesController, type: :controller do
               estimated_distance: Geo.distance_between(
                 OpenStruct.new(lat: lat, long: long), event
               ),
-              exception_notes: has_zip ? event_geography.exception_note : '',
+              exception_note: has_zip ? event_geography.exception_note : '',
               event_details: event.pub_desc_long,
               event_dates: [
                 {
