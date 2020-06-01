@@ -22,4 +22,10 @@ class Event < ApplicationRecord
   def service_description
     service_category.service_category_name
   end
+
+  def exception_note(zip_code)
+    return unless (event_zip = event_zip_codes.find_by(zip_code: zip_code))
+
+    event_zip.exception_note
+  end
 end

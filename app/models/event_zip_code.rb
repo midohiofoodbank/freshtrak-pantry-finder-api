@@ -10,9 +10,17 @@ class EventZipCode < ApplicationRecord
   alias_attribute :zip_code, :geo_value
 
   belongs_to :event, foreign_key: :event_id, inverse_of: :event_zip_codes
+  belongs_to :event_geography, foreign_key: :egp_id,
+                               inverse_of: :event_zip_codes
   has_one :agency, through: :event
 
   default_scope { zip_code_type.active }
   scope :zip_code_type, -> { where(geo_type_id: 1) }
   scope :active, -> { where(status_id: 1) }
+
+  def exception_note
+    return unless trigger_exception_note == 1
+
+    event_geography.exception_note
+  end
 end

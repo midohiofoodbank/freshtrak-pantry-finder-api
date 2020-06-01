@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :event_zip_code do
-    zip_code { event.agency.zip }
-    trigger_exception_note { 1 }
+  factory :event_geography do
+    exception_note { Faker::Quote.singular_siegler }
     added_by { 0 }
     last_update { Date.today }
     last_update_by { 0 }
-
-    event
-    event_geography
   end
 end
