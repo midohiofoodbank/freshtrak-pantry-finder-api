@@ -33,7 +33,7 @@ class EventDateSerializer < ActiveModel::Serializer
 
   attribute :event do
     {
-      name: object.event.agency.loc_nickname,
+      name: object.event.agency.loc_name,
       event_details: object.event.pub_desc_long || ''
     }
   end

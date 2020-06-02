@@ -135,7 +135,7 @@ describe Api::AgenciesController, type: :controller do
                   accept_reservations: 1,
                   accept_interest: 1,
                   event: {
-                    name: event.agency.loc_nickname,
+                    name: event.agency.loc_name,
                     event_details: event.pub_desc_long || ''
                   }
                 }
