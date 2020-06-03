@@ -5,7 +5,7 @@ module Api
   class EventsController < ApplicationController
     before_action :set_event, only: [:show]
 
-    # GET /api/event_dates/1
+    # GET /api/events/1
     def show
       render json:
         ActiveModelSerializers::SerializableResource.new(@event)
