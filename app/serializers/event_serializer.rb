@@ -13,10 +13,6 @@ class EventSerializer < ActiveModel::Serializer
 
   has_many :event_dates
 
-  def agency_name
-    object.agency.loc_name
-  end
-
   def address
     return object.address1 if object.address2.nil?
 

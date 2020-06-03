@@ -28,4 +28,9 @@ class Event < ApplicationRecord
 
     event_zip.exception_note
   end
+
+  def agency_name
+    agency.loc_name
+  end
+
 end
