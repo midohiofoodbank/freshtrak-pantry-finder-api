@@ -25,6 +25,10 @@ describe Event, type: :model do
     expect(event.service_description).to eq('Choice Pantry')
   end
 
+  it 'has an agency name' do
+    expect(event.agency_name).to eq(event.agency.loc_name)
+  end
+
   context 'with scopes' do
     it 'defaults to active and published events' do
       create(:event, status_id: 0, status_publish_event: 0)
