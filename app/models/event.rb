@@ -32,5 +32,4 @@ class Event < ApplicationRecord
   def agency_name
     agency.loc_name
   end
-
 end
