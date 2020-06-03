@@ -134,11 +134,7 @@ describe Api::AgenciesController, type: :controller do
                   date: date,
                   accept_walkin: 1,
                   accept_reservations: 1,
-                  accept_interest: 1,
-                  event: {
-                    name: event.agency.loc_name,
-                    event_details: event.pub_desc_long || ''
-                  }
+                  accept_interest: 1
                 }
               ]
             }

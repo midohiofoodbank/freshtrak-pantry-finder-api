@@ -30,11 +30,4 @@ class EventDateSerializer < ActiveModel::Serializer
   attribute :date do
     Date.parse(object.date.to_s)
   end
-
-  attribute :event do
-    {
-      name: object.event.agency.loc_name,
-      event_details: object.event.pub_desc_long || ''
-    }
-  end
 end
