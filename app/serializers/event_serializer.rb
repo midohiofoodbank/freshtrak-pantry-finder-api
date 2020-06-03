@@ -9,6 +9,7 @@ class EventSerializer < ActiveModel::Serializer
   attribute :event_name, key: :name
   attribute :service_description, key: :service
   attributes :estimated_distance, :exception_note, :event_details
+  attribute :agency_name
 
   has_many :event_dates
 
