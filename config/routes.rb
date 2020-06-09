@@ -3,7 +3,11 @@
 Jets.application.routes.draw do
   namespace :api do
     resources :agencies, only: :index
-    resources :event_dates, only: :show
+    resources :event_hours, only: :index
+    resources :event_dates, only: :show do
+      resources :event_hours, only: %i[index show] do
+      end
+    end
     resources :events, only: :show
     resources :foodbanks, only: :index
   end

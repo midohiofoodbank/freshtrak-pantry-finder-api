@@ -5,7 +5,7 @@ module Api
   class EventDatesController < ApplicationController
     before_action :set_event_date, only: [:show]
 
-    # GET /api/event_dates/1
+    # GET /api/event_dates/:id
     def show
       render json:
         ActiveModelSerializers::SerializableResource.new(@event_date).as_json
@@ -14,7 +14,7 @@ module Api
     private
 
     def set_event_date
-      @event_date = EventDate.find(params[:id])
+      @event_date = EventDate.find(params[:event_date_id])
     end
   end
 end
