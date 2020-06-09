@@ -12,10 +12,15 @@ describe EventDateSerializer do
 
     def expected_attributes
       {
-        'id' => 61, 'event_id' => 87, 'capacity' => 37,
-        'accept_walkin' => 1, 'accept_reservations' => 1,
-        'accept_interest' => 1, 'start_time' => '10 AM',
-        'end_time' => '6 PM', 'date' => '2020-06-10'
+        'id' => event_date.id,
+        'event_id' => event_date.event_id,
+        'capacity' => event_date.capacity,
+        'accept_walkin' => event_date.accept_walkin,
+        'accept_reservations' => event_date.accept_reservations,
+        'accept_interest' => event_date.accept_interest,
+        'start_time' => '10 AM',
+        'end_time' => '6 PM',
+        'date' => '2020-06-10'
       }
     end
   end

@@ -82,4 +82,26 @@ describe Api::EventHoursController, type: :controller do
       }
     }
   end
+
+  context 'with index action', type: :request do
+    before do
+      create(:event_hour, event_date: event_date)
+      create(:event_hour, event_date: event_date)
+    end
+
+    it 'returns all event hours' do
+      get 'api/event_hours'
+      expect(JSON.parse(response.body)['event_hours'].size).to eq(3)
+    end
+  end
+
+  context 'with show action', type: :request do
+    before do
+      get "api/event_hours/#{event_hour.event_hour_id}"
+    end
+
+    it 'returns one event hour' do
+      expect(JSON.parse(response.body).size).to eq(1)
+    end
+  end
 end
