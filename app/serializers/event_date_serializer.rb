@@ -30,4 +30,10 @@ class EventDateSerializer < ActiveModel::Serializer
   attribute :date do
     Date.parse(object.date.to_s)
   end
+
+  has_many :event_hours, if: -> { should_render_association }
+
+  def should_render_association
+    @instance_options.key?(:event_hours) ? true : false
+  end
 end
