@@ -9,7 +9,6 @@ module Api
     # GET api/event_dates/:id/event_hours
     def index
       if params.key?(:event_date_id)
-        set_event_date
         render json: ActiveModelSerializers::SerializableResource.new(
           @event_date, event_hours: true, event_slots: true
         ).as_json
@@ -22,7 +21,6 @@ module Api
 
     # GET /api/event_hours/:id
     def show
-      set_event_date
       render json:
         ActiveModelSerializers::SerializableResource.new(@event_date).as_json
     end
