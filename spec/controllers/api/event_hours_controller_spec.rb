@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe Api::EventHoursController, type: :controller do
-  let(:capacity) { 10 }
-  let(:event_date) { create(:event_date, capacity: capacity) }
+  let(:date) { Date.today.to_s }
+  let(:event_date) { create(:event_date, date: date.delete('-')) }
   let!(:event_hour) { create(:event_hour, event_date: event_date) }
 
   context 'with event dates by event_date_id' do
@@ -68,7 +68,7 @@ describe Api::EventHoursController, type: :controller do
         'accept_interest' => event_date.accept_interest,
         'start_time' => '10 AM',
         'end_time' => '6 PM',
-        'date' => '2020-06-10',
+        'date' => date,
         'event_hours' => [{
           'event_hour_id' => event_hour.event_hour_id,
           'start_time_key' => event_hour.start_time_key,

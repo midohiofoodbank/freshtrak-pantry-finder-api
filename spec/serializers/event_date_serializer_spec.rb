@@ -2,8 +2,8 @@
 
 describe EventDateSerializer do
   context 'with attributes' do
-    let(:capacity) { 37 }
-    let(:event_date) { create(:event_date, capacity: capacity) }
+    let(:date) { Date.today.to_s }
+    let(:event_date) { create(:event_date, date: date.delete('-')) }
 
     it 'includes event date attributes' do
       serialized_object = JSON.parse(described_class.new(event_date).to_json)
@@ -20,7 +20,7 @@ describe EventDateSerializer do
         'accept_interest' => event_date.accept_interest,
         'start_time' => '10 AM',
         'end_time' => '6 PM',
-        'date' => '2020-06-10'
+        'date' => date
       }
     end
   end
