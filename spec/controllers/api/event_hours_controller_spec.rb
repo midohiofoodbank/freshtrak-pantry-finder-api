@@ -73,7 +73,8 @@ describe Api::EventHoursController, type: :controller do
           'event_hour_id' => event_hour.event_hour_id,
           'start_time_key' => event_hour.start_time_key,
           'end_time_key' => event_hour.end_time_key,
-          'open_slots' => event_hour.open_slots, 'event_slots' => [{
+          'open_slots' => event_hour.open_slots,
+          'event_slots' => [{
             'event_slot_id' => 2, 'start_time_key' => 1000,
             'end_time_key' => 1100,
             'open_slots' => 5

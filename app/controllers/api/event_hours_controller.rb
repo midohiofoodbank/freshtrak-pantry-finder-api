@@ -15,7 +15,7 @@ module Api
         ).as_json
       else
         render json: ActiveModelSerializers::SerializableResource.new(
-          EventHour.distinct
+          EventHour.distinct.limit(100)
         ).as_json
       end
     end
