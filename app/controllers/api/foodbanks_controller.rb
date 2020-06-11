@@ -2,7 +2,7 @@
 
 module Api
   # Exposes the Foodbank data
-  class FoodbanksController < ApplicationController
+  class FoodbanksController < Api::BaseController
     def index
       foodbanks = Foodbank.by_county(search_params)
       serialized_foodbanks =

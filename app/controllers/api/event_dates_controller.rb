@@ -2,7 +2,7 @@
 
 module Api
   # Controller to expose Event Dates
-  class EventDatesController < ApplicationController
+  class EventDatesController < Api::BaseController
     before_action :set_event_date, only: [:show]
 
     # GET /api/event_dates/:id

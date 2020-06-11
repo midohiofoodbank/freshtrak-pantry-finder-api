@@ -6,9 +6,4 @@
 # things such as request forgery protection and filtering of sensitive
 # request parameters.
 class ApplicationController < Jets::Controller::Base
-  rescue_from ActiveRecord::RecordNotFound, with: :missing_record
-
-  def missing_record
-    render json: { message: "Couldn't find Record" }, status: 404
-  end
 end
