@@ -2,7 +2,7 @@
 
 module Api
   # Controller to expose Events
-  class EventsController < ApplicationController
+  class EventsController < Api::BaseController
     before_action :set_event, only: [:show]
 
     # GET /api/events/1

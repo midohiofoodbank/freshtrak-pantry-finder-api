@@ -2,7 +2,7 @@
 
 module Api
   # Controller to expose Event Hours
-  class EventHoursController < ApplicationController
+  class EventHoursController < Api::BaseController
     before_action :set_event_date, only: %i[show index]
     before_action :set_event_hour, only: %i[show]
 
