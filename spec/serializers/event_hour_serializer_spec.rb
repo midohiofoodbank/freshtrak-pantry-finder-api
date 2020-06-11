@@ -13,8 +13,8 @@ describe EventHourSerializer do
     def expected_attributes
       {
         'event_hour_id' => event_hour.event_hour_id,
-        'start_time_key' => event_hour.start_time_key,
-        'end_time_key' => event_hour.end_time_key,
+        'start_time' => '10 AM',
+        'end_time' => '11 AM',
         'open_slots' => event_hour.open_slots
       }
     end

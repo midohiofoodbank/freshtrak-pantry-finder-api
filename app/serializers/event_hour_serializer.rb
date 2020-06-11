@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 # Defines EventHour attributes to be returned in JSON
-class EventHourSerializer < ActiveModel::Serializer
-  attributes :event_hour_id, :start_time_key, :end_time_key, :open_slots
+class EventHourSerializer < ApplicationSerializer
+  attributes :event_hour_id, :start_time, :end_time, :open_slots
 
   def open_slots
     object&.open_slots

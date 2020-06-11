@@ -12,12 +12,9 @@ describe Api::EventHoursController, type: :controller do
 
     it 'returns event hours of a specific event date' do
       json_response = JSON.parse(response.body)
-      response = json_response['event_date']['event_hours'].first
+      response = json_response['event_date']['event_hours']
 
-      expect(response['event_hour_id']).to eq(event_hour.event_hour_id)
-      expect(response['start_time_key']).to eq(event_hour.start_time_key)
-      expect(response['end_time_key']).to eq(event_hour.end_time_key)
-      expect(response['open_slots']).to eq(event_hour.open_slots)
+      expect(response.count).to eq(1)
     end
 
     it 'responds with no event slots without event slots data' do
@@ -36,11 +33,8 @@ describe Api::EventHoursController, type: :controller do
     it 'shows event slots' do
       response_body = JSON.parse(response.body)
       event_hours = response_body['event_date']['event_hours']
-      event_slots = event_hours.first['event_slots'].first
-      expect(event_slots).to eq({ 'event_slot_id' => 1,
-                                  'start_time_key' => 1000,
-                                  'end_time_key' => 1100,
-                                  'open_slots' => 5 })
+      response_body = event_hours.first['event_slots'].first
+      response_body.should == expected_event_slots
     end
   end
 
@@ -54,6 +48,15 @@ describe Api::EventHoursController, type: :controller do
       response_body = JSON.parse(response.body)
       response_body.should == expected_response
     end
+  end
+
+  def expected_event_slots
+    {
+      'event_slot_id' => 1,
+      'start_time' => '10 AM',
+      'end_time' => '11 AM',
+      'open_slots' => 5
+    }
   end
 
   def expected_response
@@ -71,12 +74,13 @@ describe Api::EventHoursController, type: :controller do
         'date' => date,
         'event_hours' => [{
           'event_hour_id' => event_hour.event_hour_id,
-          'start_time_key' => event_hour.start_time_key,
-          'end_time_key' => event_hour.end_time_key,
+          'start_time' => '10 AM',
+          'end_time' => '11 AM',
           'open_slots' => event_hour.open_slots,
           'event_slots' => [{
-            'event_slot_id' => 2, 'start_time_key' => 1000,
-            'end_time_key' => 1100,
+            'event_slot_id' => 2,
+            'start_time' => '10 AM',
+            'end_time' => '11 AM',
             'open_slots' => 5
           }]
         }]
