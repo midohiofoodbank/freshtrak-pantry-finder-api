@@ -8,7 +8,6 @@ module Api
     before_action :set_agency, only: [:show]
 
     def index
-      puts("In controller @agencies: #{@agencies}")
       if (@zip = search_params[:zip_code])
         @agencies = @agencies.by_zip_code(@zip)
       end
