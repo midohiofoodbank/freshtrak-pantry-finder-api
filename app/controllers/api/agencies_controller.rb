@@ -5,8 +5,10 @@ module Api
   class AgenciesController < ApplicationController
     before_action :set_agencies, only: [:index]
     before_action :set_user_location, only: [:index]
+    before_action :set_agency, only: [:show]
 
     def index
+      puts("In controller @agencies: #{@agencies}")
       if (@zip = search_params[:zip_code])
         @agencies = @agencies.by_zip_code(@zip)
       end
@@ -15,6 +17,14 @@ module Api
       end
 
       render json: serialized_agencies
+    end
+
+    # GET /api/agencies/:id
+    def show
+      render json:
+        ActiveModelSerializers::SerializableResource.new(@agency,
+                                                         zip_code: @agency.zip)
+                                                    .as_json
     end
 
     private
@@ -30,6 +40,12 @@ module Api
         else
           Agency.distinct
         end
+    end
+
+    def set_agency
+      return unless params[:id]
+
+      @agency = Agency.find(params[:id])
     end
 
     # set_user_location loads the objects used to return distance.
