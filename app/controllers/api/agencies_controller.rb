@@ -2,7 +2,7 @@
 
 module Api
   # Exposes the Agency location data
-  class AgenciesController < ApplicationController
+  class AgenciesController < Api::BaseController
     before_action :set_agencies, only: [:index]
     before_action :set_user_location, only: [:index]
     before_action :set_agency, only: [:show]

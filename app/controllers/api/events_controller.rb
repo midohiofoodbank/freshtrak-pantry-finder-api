@@ -2,13 +2,15 @@
 
 module Api
   # Controller to expose Events
-  class EventsController < ApplicationController
+  class EventsController < Api::BaseController
     before_action :set_event, only: [:show]
 
-    # GET /api/events/1
+    # GET /api/events/:id
     def show
       render json:
-        ActiveModelSerializers::SerializableResource.new(@event)
+        ActiveModelSerializers::SerializableResource.new(@event,
+                                                         zip_code: @event.zip)
+                                                    .as_json
     end
 
     private
