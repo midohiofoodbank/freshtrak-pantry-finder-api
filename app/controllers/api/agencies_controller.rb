@@ -21,9 +21,7 @@ module Api
     # GET /api/agencies/:id
     def show
       render json:
-        ActiveModelSerializers::SerializableResource.new(@agency,
-                                                         zip_code: @agency.zip)
-                                                    .as_json
+        ActiveModelSerializers::SerializableResource.new(@agency).as_json
     end
 
     private

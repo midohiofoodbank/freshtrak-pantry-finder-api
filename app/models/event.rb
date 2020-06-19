@@ -24,7 +24,13 @@ class Event < ApplicationRecord
   end
 
   def exception_note(zip_code)
-    return unless (event_zip = event_zip_codes.find_by(zip_code: zip_code))
+    # if zip_code parameter submitted use it, otherwise use event.zip
+    event_zip = if zip_code
+                  event_zip_codes.find_by(zip_code: zip_code)
+                else
+                  event_zip_codes.find_by(zip_code: zip)
+                end
+    return unless event_zip
 
     event_zip.exception_note
   end

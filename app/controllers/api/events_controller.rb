@@ -8,9 +8,7 @@ module Api
     # GET /api/events/:id
     def show
       render json:
-        ActiveModelSerializers::SerializableResource.new(@event,
-                                                         zip_code: @event.zip)
-                                                    .as_json
+        ActiveModelSerializers::SerializableResource.new(@event).as_json
     end
 
     private
