@@ -24,6 +24,14 @@ describe Api::AgenciesController, type: :controller do
     create(:event_date, event: other_event, date: other_date)
   end
 
+  it 'shows the agency' do
+    get "/api/agencies/#{agency.id}"
+
+    expect(response.status).to eq 200
+    agency_response = JSON.parse(response.body)['agency']
+    expect(agency_response['id']).to eq(agency.id)
+  end
+
   it 'responds with no agencies without filter params' do
     get '/api/agencies'
     expect(response.status).to eq 200

@@ -5,10 +5,10 @@ module Api
   class EventsController < Api::BaseController
     before_action :set_event, only: [:show]
 
-    # GET /api/events/1
+    # GET /api/events/:id
     def show
       render json:
-        ActiveModelSerializers::SerializableResource.new(@event)
+        ActiveModelSerializers::SerializableResource.new(@event).as_json
     end
 
     private
