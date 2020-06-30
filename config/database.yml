@@ -12,20 +12,10 @@ default: &default
 development:
   <<: *default
   database: <%= ENV['DB_NAME'] || 'pantry_finder_api_development' %>
-  username: root
-  password: rootuser
-  pool: 5
-  host: 127.0.0.1
-  port: 3306
 
 test:
   <<: *default
   database: pantry_finder_api_test
-  username: root
-  password: rootuser
-  pool: 5
-  host: 127.0.0.1
-  port: 3306
 
 beta:
   <<: *default
