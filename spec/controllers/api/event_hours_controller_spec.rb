@@ -53,6 +53,7 @@ describe Api::EventHoursController, type: :controller do
   def expected_event_slots
     {
       'event_slot_id' => 1,
+      'capacity' => 5,
       'start_time' => '10 AM',
       'end_time' => '11 AM',
       'open_slots' => 5
@@ -79,6 +80,7 @@ describe Api::EventHoursController, type: :controller do
           'open_slots' => event_hour.open_slots,
           'event_slots' => [{
             'event_slot_id' => 2,
+            'capacity' => 5,
             'start_time' => '10 AM',
             'end_time' => '11 AM',
             'open_slots' => 5
