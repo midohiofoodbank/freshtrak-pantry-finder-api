@@ -5,7 +5,7 @@ module Api
   class EventSlotsController < Api::BaseController
     before_action :set_event_slot, only: [:show]
 
-    # GET /api/event_dates/:id
+    # GET /api/event_slots/:id
     def show
       render json:
         ActiveModelSerializers::SerializableResource.new(@event_slot).as_json
