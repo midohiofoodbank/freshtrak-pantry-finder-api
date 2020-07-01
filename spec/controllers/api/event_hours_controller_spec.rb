@@ -4,6 +4,7 @@ describe Api::EventHoursController, type: :controller do
   let(:date) { Date.today.to_s }
   let(:event_date) { create(:event_date, date: date.delete('-')) }
   let!(:event_hour) { create(:event_hour, event_date: event_date) }
+  let!(:event_slot) { create(:event_slot, event_hour: event_hour) }
 
   context 'with event dates by event_date_id' do
     before do
@@ -40,7 +41,6 @@ describe Api::EventHoursController, type: :controller do
 
   context 'with event dates and event slots by event_date_id' do
     before do
-      create(:event_slot, event_hour: event_hour)
       get "api/event_dates/#{event_date.id}/event_hours"
     end
 
@@ -52,11 +52,11 @@ describe Api::EventHoursController, type: :controller do
 
   def expected_event_slots
     {
-      'event_slot_id' => 1,
-      'capacity' => 5,
-      'start_time' => '10 AM',
-      'end_time' => '11 AM',
-      'open_slots' => 5
+      'event_slot_id' => event_slot.event_slot_id,
+      'capacity' => event_slot.capacity,
+      'start_time' => format_time_key(event_slot.start_time_key.to_s),
+      'end_time' => format_time_key(event_slot.end_time_key.to_s),
+      'open_slots' => event_slot.capacity - event_slot.reserved
     }
   end
 
@@ -70,21 +70,21 @@ describe Api::EventHoursController, type: :controller do
         'accept_walkin' => event_date.accept_walkin,
         'accept_reservations' => event_date.accept_reservations,
         'accept_interest' => event_date.accept_interest,
-        'start_time' => '10 AM',
-        'end_time' => '6 PM',
+        'start_time' => format_time_key(event_date.start_time_key.to_s),
+        'end_time' => format_time_key(event_date.end_time_key.to_s),
         'date' => date,
         'event_hours' => [{
           'event_hour_id' => event_hour.event_hour_id,
-          'capacity' => 5,
-          'start_time' => '10 AM',
-          'end_time' => '11 AM',
-          'open_slots' => event_hour.open_slots,
+          'capacity' => event_hour.capacity,
+          'start_time' => format_time_key(event_hour.start_time_key.to_s),
+          'end_time' => format_time_key(event_hour.end_time_key.to_s),
+          'open_slots' => event_hour.capacity - event_hour.reserved,
           'event_slots' => [{
-            'event_slot_id' => 2,
-            'capacity' => 5,
-            'start_time' => '10 AM',
-            'end_time' => '11 AM',
-            'open_slots' => 5
+            'event_slot_id' => event_slot.event_slot_id,
+            'capacity' => event_slot.capacity,
+            'start_time' => format_time_key(event_slot.start_time_key.to_s),
+            'end_time' => format_time_key(event_slot.end_time_key.to_s),
+            'open_slots' => event_slot.capacity - event_slot.reserved
           }]
         }]
       }
