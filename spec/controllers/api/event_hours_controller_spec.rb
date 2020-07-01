@@ -116,10 +116,6 @@ describe Api::EventHoursController, type: :controller do
   def format_time_key(time_key)
     time_key = "0#{time_key}" if time_key.length == 3
     minutes = time_key.last(2)
-    if minutes == '00'
-      Time.strptime(time_key, '%H%M').strftime('%l %p').lstrip
-    else
-      Time.strptime(time_key, '%H%M').strftime('%l:%M %p').lstrip
-    end
+    Time.strptime(time_key, '%H%M').strftime('%l %p').lstrip if minutes == '00'
   end
 end
