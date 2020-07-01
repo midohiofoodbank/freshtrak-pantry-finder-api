@@ -4,7 +4,6 @@ require 'simplecov'
 SimpleCov.start
 require 'simplecov-cobertura'
 SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
-require 'support/action_helper'
 
 ENV['JETS_TEST'] = '1'
 ENV['JETS_ENV'] ||= 'test'
@@ -32,7 +31,6 @@ end
 RSpec.configure do |c|
   c.include Helpers
   c.include FactoryBot::Syntax::Methods
-  c.include ActionHelper
 
   c.before(:suite) do
     FactoryBot.find_definitions
