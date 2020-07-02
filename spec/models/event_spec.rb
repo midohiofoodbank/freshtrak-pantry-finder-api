@@ -21,8 +21,6 @@ describe Event, type: :model do
     expect(event.event_dates.pluck(:id)).to eq(dates.pluck(:id))
   end
 
-  # it { should have_many(:forms) }
-
   it 'has many forms' do
     forms = 5.times.map { create(:form, event: event) }
     expect(event.forms.pluck(:id)).to eq(forms.pluck(:id))

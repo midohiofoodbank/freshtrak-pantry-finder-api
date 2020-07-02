@@ -5,7 +5,6 @@ describe Api::AgenciesController, type: :controller do
   let(:date) { (Date.today + 5).to_s }
   let(:agency) { create(:agency) }
   let(:event) { create(:event, agency: agency) }
-  # let(:form) { create(:form, event: event) }
   let(:event_geography) { create(:event_geography) }
   let!(:event_zip_code) do
     create(:event_zip_code, event: event, zip_code: zip_code.zip_code,
