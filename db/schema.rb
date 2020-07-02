@@ -148,6 +148,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "published_date_key", null: false, comment: "The date the entry is allowed to be shown to the public.", unsigned: true
     t.integer "published_end_date_key", default: 0, null: false, comment: "The date the entry stops being published.", unsigned: true
     t.integer "published_end_time_key", default: 0, null: false, comment: "The time the entry stops being published", unsigned: true
+    t.datetime "published_end_datetime"
     t.string "public_registration_url", default: "", null: false, comment: "URL for customers to go and register themselves for a distribution"
     t.string "private_registration_url", default: "", null: false, comment: "URL for 3rd parties to go and register customers through."
     t.integer "mobile_serve_user_id", default: 0, null: false, comment: "The user_id that mobile logins go under", unsigned: true
@@ -429,6 +430,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string "fb_donate_url", default: "", null: false, comment: "Public link for how to donate money to this foodbank"
     t.string "fb_food_donate_url", default: "", null: false, comment: "Public link for how to donate food to this foodbank"
     t.string "fb_fano_url"
+    t.binary "fb_html", comment: "Field to hold HTML Text for displaying informaiton on the FreshTrak website."
     t.integer "display_order", limit: 1, null: false, unsigned: true
     t.integer "live_on_pt", limit: 1, default: 2, null: false, unsigned: true
     t.date "live_date"
@@ -545,6 +547,49 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "added_by", null: false, unsigned: true
     t.timestamp "last_update", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "last_update_by", null: false, unsigned: true
+    t.integer "status_id", limit: 1, null: false, unsigned: true
+  end
+
+  create_table "forms", primary_key: "form_id", id: :integer, limit: 2, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "will include all PT forms for both client and agency level electronic signatures", force: :cascade do |t|
+    t.string "form_num", limit: 50, default: "", null: false
+    t.string "form_master_num", limit: 50, default: "", null: false
+    t.string "form_name", limit: 100, default: "", null: false
+    t.string "form_display_file"
+    t.string "form_submit_file"
+    t.string "form_audit_file"
+    t.integer "audit_file_status", limit: 1, default: 2, null: false, comment: "1 = active, 2 = inactive. Used to control whether or not the audit file is active. mainly to control an audit link within the e-signature tab.", unsigned: true
+    t.string "form_paper_file", comment: "PT version of the form that is designed to print with populated data"
+    t.string "form_download_file", comment: "original form supplied by regulator, typically the pdf or word doc, with the path to the file on the PT server"
+    t.string "language", limit: 50, default: "", null: false
+    t.integer "language_id", limit: 2, null: false, comment: "from the table languages", unsigned: true
+    t.string "issued_by", limit: 100, default: "", null: false
+    t.date "effective_start", null: false
+    t.date "effective_end", null: false
+    t.date "required_signing", default: "2017-01-01", null: false, comment: "The date by which the user needs to sign the contract."
+    t.integer "predesessor_id", limit: 2, null: false, comment: "id of this same form from the prior time period", unsigned: true
+    t.integer "successor_id", limit: 2, null: false, comment: "id of this same form for the next time period", unsigned: true
+    t.string "form_data_1", default: "", null: false
+    t.string "form_data_2", default: "", null: false
+    t.string "form_data_3", default: "", null: false
+    t.string "form_data_4", default: "", null: false
+    t.string "form_data_5", default: "", null: false
+    t.string "form_data_6", default: "", null: false
+    t.string "form_data_multi", default: "", null: false
+    t.string "income_limits_file"
+    t.decimal "fpl_level", precision: 6, scale: 3, comment: "fpl multiplier for this program"
+    t.string "form_source", default: "", null: false
+    t.integer "grouping", limit: 2, default: 0, null: false, comment: "1-TEFAP 2_generic 3-csfp 4-disclosure 5-application 6-client_privacy 7-agency_privacy 8-agency_contract", unsigned: true
+    t.string "group_name", limit: 50, default: "", null: false
+    t.integer "sub_grouping", limit: 2, default: 0, null: false, unsigned: true
+    t.text "program_staff_sign_serve_text"
+    t.string "web_link"
+    t.string "notes", default: "", null: false
+    t.integer "max_age_child", limit: 1, null: false, unsigned: true
+    t.integer "max_age_adult", limit: 1, null: false, unsigned: true
+    t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.string "added_by", limit: 50, default: "", null: false
+    t.timestamp "last_update", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.string "last_update_by", limit: 60, default: "", null: false
     t.integer "status_id", limit: 1, null: false, unsigned: true
   end
 

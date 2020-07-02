@@ -5,6 +5,7 @@ describe Api::AgenciesController, type: :controller do
   let(:date) { (Date.today + 5).to_s }
   let(:agency) { create(:agency) }
   let(:event) { create(:event, agency: agency) }
+  # let(:form) { create(:form, event: event) }
   let(:event_geography) { create(:event_geography) }
   let!(:event_zip_code) do
     create(:event_zip_code, event: event, zip_code: zip_code.zip_code,
@@ -13,6 +14,9 @@ describe Api::AgenciesController, type: :controller do
   let!(:event_date) do
     create(:event_date, event: event, date: date.delete('-'),
                         start_time_key: 930, end_time_key: 2200)
+  end
+  let!(:form) do
+    create(:form, event: event)
   end
 
   before do
@@ -132,6 +136,10 @@ describe Api::AgenciesController, type: :controller do
               exception_note: has_zip ? event_geography.exception_note : '',
               event_details: event.pub_desc_long,
               agency_name: agency.loc_name,
+              form_data: {
+                display_age_adult: form.max_age_child + 1,
+                display_age_senior: form.max_age_adult + 1
+              },
               event_dates: [
                 {
                   id: event_date.id,

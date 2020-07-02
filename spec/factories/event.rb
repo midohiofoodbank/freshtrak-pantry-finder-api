@@ -13,6 +13,7 @@ FactoryBot.define do
     status_id { 1 }
     status_publish_event { 1 }
     status_publish_event_dates { 1 }
+    form_master_num { 'oh_jfs_04221' }
     d_trend_month { '' }
     d_trend_week { '' }
     sc_monthly_10 { '' }

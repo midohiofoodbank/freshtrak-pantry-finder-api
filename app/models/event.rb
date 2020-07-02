@@ -13,6 +13,8 @@ class Event < ApplicationRecord
                              dependent: :restrict_with_exception
   has_many :event_dates, foreign_key: :event_id, inverse_of: :event,
                          dependent: :restrict_with_exception
+  has_many :forms, primary_key: :form_master_num, foreign_key: :form_master_num,
+                   inverse_of: :event, dependent: :restrict_with_exception
 
   default_scope { active.published }
   scope :active, -> { where(status_id: 1) }
@@ -37,5 +39,15 @@ class Event < ApplicationRecord
 
   def agency_name
     agency.loc_name
+  end
+
+  def form_data
+    return '' unless forms[0]
+
+    # relies on forms data rule that the only difference
+    # in the forms per event is the language id, so just
+    # taking the first result
+    { display_age_adult: forms[0].max_age_child + 1,
+      display_age_senior: forms[0].max_age_adult + 1 }
   end
 end
