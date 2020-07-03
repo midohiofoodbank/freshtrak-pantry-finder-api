@@ -16,10 +16,9 @@ describe Form, type: :model do
     end
 
     it 'does not include results outside of date range' do
-      within_range = create(:form, effective_start: Date.today.to_s)
       create(:form, effective_start: (Date.today + 1).to_s)
-      expected_id = within_range.id
-      expect(described_class.all.pluck(:id)).to eq([expected_id])
+
+      expect(described_class.within_range).to be_empty
     end
   end
 end
