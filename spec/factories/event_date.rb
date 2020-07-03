@@ -16,6 +16,9 @@ FactoryBot.define do
     accept_reservations { 1 }
     accept_interest { 1 }
     published_date_key { (Date.today - 1).to_s.delete('-') }
+    published_end_datetime do
+      (DateTime.current + 1).utc.strftime('%Y-%m-%d %H:%M:%S')
+    end
     added_by { 0 }
     last_update_by { 0 }
 
