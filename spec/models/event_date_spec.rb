@@ -58,8 +58,16 @@ describe EventDate, type: :model do
     it 'ignores event dates for events that do not publish dates' do
       event = create(:event, status_publish_event_dates: 0)
       create(:event_date, event: event)
-
+      DateTime.current.utc.strftime('%Y-%m-%d %H:%M:%S')
       expect(described_class.event_publishes_dates).to be_empty
+    end
+
+    it 'ignores event dates where current datetime < published_end_datetime' do
+      # create event_date with published_end_datetime two days in the past
+      create(:event_date, published_end_datetime:
+             (DateTime.current - 2).utc.strftime('%Y-%m-%d %H:%M:%S'))
+
+      expect(described_class.end_datetime).to be_empty
     end
   end
 end
