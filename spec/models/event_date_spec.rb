@@ -58,7 +58,7 @@ describe EventDate, type: :model do
     it 'ignores event dates for events that do not publish dates' do
       event = create(:event, status_publish_event_dates: 0)
       create(:event_date, event: event)
-      DateTime.current.utc.strftime('%Y-%m-%d %H:%M:%S')
+
       expect(described_class.event_publishes_dates).to be_empty
     end
 
