@@ -11,6 +11,6 @@ class Form < ApplicationRecord
   scope :active, -> { where(status_id: 1) }
 
   scope :within_range, lambda {
-    where('? between effective_start and effective_end', Date.today.to_s)
+    where('? between effective_start and effective_end', Date.today)
   }
 end

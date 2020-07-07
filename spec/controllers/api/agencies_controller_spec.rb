@@ -15,7 +15,8 @@ describe Api::AgenciesController, type: :controller do
                         start_time_key: 930, end_time_key: 2200)
   end
   let!(:form) do
-    create(:form, event: event)
+    # must set form form_master_num to event form_master_num per scope
+    create(:form, event: event, form_master_num: event.form_master_num)
   end
 
   before do

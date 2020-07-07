@@ -15,10 +15,25 @@ describe Form, type: :model do
       expect(described_class.all.pluck(:id)).to eq([expected_id])
     end
 
-    it 'does not include results outside of date range' do
-      create(:form, effective_start: (Date.today + 1).to_s)
+    it 'does not include results before effective start' do
+      create(:form, effective_start: (Date.today + 1),
+                    effective_end: (Date.today + 5))
 
       expect(described_class.within_range).to be_empty
+    end
+
+    it 'does not include results after effective end' do
+      create(:form, effective_start: (Date.today - 10),
+                    effective_end: (Date.today - 5))
+
+      expect(described_class.within_range).to be_empty
+    end
+
+    it 'includes results within effective range' do
+      create(:form, effective_start: (Date.today - 10),
+                    effective_end: (Date.today + 10))
+
+      expect(described_class.within_range).not_to be_empty
     end
   end
 end
