@@ -35,19 +35,19 @@ describe Form, type: :model do
 
       expect(described_class.within_range).not_to be_empty
     end
-    
+
     it 'includes results on effective start date' do
-      create(:form, effective_start: (Date.today),
+      create(:form, effective_start: Date.today,
                     effective_end: (Date.today + 10))
 
       expect(described_class.within_range).not_to be_empty
     end
 
     it 'includes results on effective end date' do
-        create(:form, effective_start: (Date.today - 10),
-                      effective_end: (Date.today))
-  
-        expect(described_class.within_range).not_to be_empty
+      create(:form, effective_start: (Date.today - 10),
+                    effective_end: Date.today)
+
+      expect(described_class.within_range).not_to be_empty
     end
   end
 end
