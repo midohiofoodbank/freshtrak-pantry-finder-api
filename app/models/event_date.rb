@@ -9,8 +9,11 @@ class EventDate < ApplicationRecord
   has_many :event_hours, foreign_key: :event_date_id, inverse_of: :event_date,
                          dependent: :restrict_with_exception
 
-  default_scope { active.published.event_publishes_dates.future.end_datetime }
-  scope :active, -> { where(status_id: 1) }
+  default_scope { active.published.event_publishes_dates.future }
+  scope :active, lambda {
+    where('event_dates.status_id = 1 AND ? <= published_end_datetime',
+          DateTime.current.utc.strftime('%Y-%m-%d %H:%M:%S'))
+  }
   scope :event_publishes_dates, lambda {
     joins(:event).merge(Event.publishes_dates)
   }
@@ -20,10 +23,5 @@ class EventDate < ApplicationRecord
   }
   scope :future, lambda {
     where('event_date_key >= ?', Date.today.to_s.delete('-'))
-  }
-
-  scope :end_datetime, lambda {
-    where('? <= published_end_datetime',
-          DateTime.current.utc.strftime('%Y-%m-%d %H:%M:%S'))
   }
 end

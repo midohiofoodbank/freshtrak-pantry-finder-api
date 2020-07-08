@@ -62,12 +62,26 @@ describe EventDate, type: :model do
       expect(described_class.event_publishes_dates).to be_empty
     end
 
-    it 'ignores event dates where current datetime < published_end_datetime' do
+    it 'ignores event dates where current datetime > published_end_datetime' do
       # create event_date with published_end_datetime two days in the past
       create(:event_date, published_end_datetime:
              (DateTime.current - 2).utc.strftime('%Y-%m-%d %H:%M:%S'))
 
-      expect(described_class.end_datetime).to be_empty
+      expect(described_class.active).to be_empty
+    end
+
+    it 'accepts event dates where current datetime == published_end_datetime' do
+      create(:event_date, published_end_datetime:
+             DateTime.current.utc.strftime('%Y-%m-%d %H:%M:%S'))
+
+      expect(described_class.active).not_to be_empty
+    end
+
+    it 'accepts event dates where current datetime < published_end_datetime' do
+      create(:event_date, published_end_datetime:
+             (DateTime.current + 2).utc.strftime('%Y-%m-%d %H:%M:%S'))
+
+      expect(described_class.active).not_to be_empty
     end
   end
 end
