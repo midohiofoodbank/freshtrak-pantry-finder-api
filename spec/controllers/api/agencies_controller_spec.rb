@@ -4,7 +4,10 @@ describe Api::AgenciesController, type: :controller do
   let(:zip_code) { create(:zip_code) }
   let(:date) { (Date.today + 5).to_s }
   let(:agency) { create(:agency) }
-  let(:event) { create(:event, agency: agency) }
+  let(:form) { create(:form) }
+  let!(:event) do
+    create(:event, agency: agency, form_master_num: form.form_master_num)
+  end
   let(:event_geography) { create(:event_geography) }
   let!(:event_zip_code) do
     create(:event_zip_code, event: event, zip_code: zip_code.zip_code,
@@ -13,10 +16,6 @@ describe Api::AgenciesController, type: :controller do
   let!(:event_date) do
     create(:event_date, event: event, date: date.delete('-'),
                         start_time_key: 930, end_time_key: 2200)
-  end
-  let!(:form) do
-    # must set form form_master_num to event form_master_num per scope
-    create(:form, event: event, form_master_num: event.form_master_num)
   end
 
   before do
