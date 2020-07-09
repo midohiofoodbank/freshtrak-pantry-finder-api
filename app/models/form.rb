@@ -16,10 +16,10 @@ class Form < ApplicationRecord
   }
 
   def display_age_adult
-    max_age_child + 1 || ''
+    max_age_child + 1
   end
 
   def display_age_senior
-    max_age_adult + 1 || ''
+    max_age_adult + 1
   end
 end
