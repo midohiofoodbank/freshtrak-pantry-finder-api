@@ -136,10 +136,6 @@ describe Api::AgenciesController, type: :controller do
               exception_note: has_zip ? event_geography.exception_note : '',
               event_details: event.pub_desc_long,
               agency_name: agency.loc_name,
-              form_data: {
-                display_age_adult: form.max_age_child + 1,
-                display_age_senior: form.max_age_adult + 1
-              },
               event_dates: [
                 {
                   id: event_date.id,
@@ -151,6 +147,13 @@ describe Api::AgenciesController, type: :controller do
                   accept_walkin: 1,
                   accept_reservations: 1,
                   accept_interest: 1
+                }
+              ],
+              forms: [
+                {
+                  id: form.id,
+                  display_age_adult: form.max_age_child + 1,
+                  display_age_senior: form.max_age_adult + 1
                 }
               ]
             }

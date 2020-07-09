@@ -9,9 +9,10 @@ class EventSerializer < ActiveModel::Serializer
   attribute :event_name, key: :name
   attribute :service_description, key: :service
   attributes :estimated_distance, :exception_note, :event_details
-  attributes :agency_name, :form_data
+  attributes :agency_name
 
   has_many :event_dates
+  has_many :forms
 
   def address
     return object.address1 if object.address2.nil?

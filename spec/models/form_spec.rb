@@ -15,6 +15,13 @@ describe Form, type: :model do
       expect(described_class.all.pluck(:id)).to eq([expected_id])
     end
 
+    it 'defaults to language_id ==1' do
+      language = create(:form, language_id: 1)
+      create(:form, language_id: 0)
+      expected_id = language.id
+      expect(described_class.all.pluck(:id)).to eq([expected_id])
+    end
+
     it 'does not include results before effective start' do
       create(:form, effective_start: (Date.today + 1),
                     effective_end: (Date.today + 5))
