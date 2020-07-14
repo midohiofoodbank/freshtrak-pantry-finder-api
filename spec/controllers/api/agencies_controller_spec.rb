@@ -4,7 +4,10 @@ describe Api::AgenciesController, type: :controller do
   let(:zip_code) { create(:zip_code) }
   let(:date) { (Date.today + 5).to_s }
   let(:agency) { create(:agency) }
-  let(:event) { create(:event, agency: agency) }
+  let(:form) { create(:form) }
+  let!(:event) do
+    create(:event, agency: agency, form_master_num: form.form_master_num)
+  end
   let(:event_geography) { create(:event_geography) }
   let!(:event_zip_code) do
     create(:event_zip_code, event: event, zip_code: zip_code.zip_code,
@@ -143,6 +146,13 @@ describe Api::AgenciesController, type: :controller do
                   accept_walkin: 1,
                   accept_reservations: 1,
                   accept_interest: 1
+                }
+              ],
+              forms: [
+                {
+                  id: form.id,
+                  display_age_adult: form.max_age_child + 1,
+                  display_age_senior: form.max_age_adult + 1
                 }
               ]
             }

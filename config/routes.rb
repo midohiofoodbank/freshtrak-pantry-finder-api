@@ -4,6 +4,7 @@ Jets.application.routes.draw do
   namespace :api do
     resources :agencies, only: %i[index show]
     resources :event_hours, only: %i[index show]
+    resources :event_slots, only: :show
     resources :event_dates, only: :show do
       resources :event_hours, only: %i[index show] do
       end
