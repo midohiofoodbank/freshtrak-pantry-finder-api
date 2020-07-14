@@ -8,7 +8,9 @@ module Api
     # GET /api/event_dates/:id
     def show
       render json:
-        ActiveModelSerializers::SerializableResource.new(@event_date).as_json
+        ActiveModelSerializers::SerializableResource.new(
+          @event_date, event_hours: true, event_slots: true
+        ).as_json
     end
 
     private
