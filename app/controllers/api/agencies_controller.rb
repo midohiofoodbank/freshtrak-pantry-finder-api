@@ -11,6 +11,9 @@ module Api
       if (@zip = search_params[:zip_code])
         @agencies = @agencies.by_zip_code(@zip)
       end
+      if (@service = search_params[:service])
+        @agencies = @agencies.by_service_category(@service)
+      end
       if (date = search_params[:event_date])
         @agencies = @agencies.with_event_after(date.delete('-'))
       end
@@ -27,12 +30,13 @@ module Api
     private
 
     def search_params
-      params.permit(:zip_code, :event_date, :lat, :long)
+      params.permit(:zip_code, :event_date, :lat, :long, :service)
     end
 
     def set_agencies
       @agencies =
-        if !search_params[:zip_code] && !search_params[:event_date]
+        if !search_params[:zip_code] && !search_params[:event_date] &&
+           !search_params[:service]
           Agency.none
         else
           Agency.distinct
