@@ -1,0 +1,7 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      ruby: latest
+    commands:
+      - rbenv install 2.5.8
