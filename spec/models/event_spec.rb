@@ -48,5 +48,16 @@ describe Event, type: :model do
       expected_id = event.id
       expect(described_class.publishes_dates.pluck(:id)).to eq([expected_id])
     end
+
+    it 'can find events through a service_category' do
+      service = create(:service_category)
+      events = 5.times.map do
+        create(:event, service_category: service)
+      end
+
+      events_results =
+        described_class.by_service_category(service.service_category)
+      expect(events_results.pluck(:id)).to eq(events.pluck(:id))
+    end
   end
 end

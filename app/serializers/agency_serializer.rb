@@ -9,6 +9,16 @@ class AgencySerializer < ActiveModel::Serializer
 
   has_many :events
 
+  def events
+    # required to limit events by agencies controller service param
+    # because agency version of query limits by agencies only
+    if (service = instance_options[:service])
+      return object.events.by_service_category(service)
+    end
+
+    object.events
+  end
+
   def address
     return object.address1 if object.address2.empty?
 

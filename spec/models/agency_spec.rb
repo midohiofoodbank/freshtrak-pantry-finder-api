@@ -31,6 +31,15 @@ describe Agency, type: :model do
     expect(agency.event_zip_codes.pluck(:id)).to eq(event_zip_codes.pluck(:id))
   end
 
+  it 'has service categories' do
+    service_categories = 5.times.map do
+      create(:event, agency: agency).service_category
+    end
+
+    expect(agency.service_categories.pluck(:id))
+      .to eq(service_categories.pluck(:id))
+  end
+
   context 'with scopes' do
     before do
       # default that should be ignored by scopes
@@ -79,6 +88,19 @@ describe Agency, type: :model do
 
       agency_results = described_class.with_event_after(target_date)
       expect(agency_results.pluck(:id)).to eq(expected_agency_ids)
+    end
+
+    it 'can find agencies through a service_category' do
+      service = create(:service_category)
+      agencies = 5.times.map do
+        agency = create(:agency)
+        create(:event, service_category: service, agency: agency)
+        agency
+      end
+
+      agency_results =
+        described_class.by_service_category(service.service_category)
+      expect(agency_results.pluck(:id)).to eq(agencies.pluck(:id))
     end
   end
 end

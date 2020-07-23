@@ -40,4 +40,9 @@ class Event < ApplicationRecord
   def agency_name
     agency.loc_name
   end
+
+  scope :by_service_category, lambda { |service_category|
+    joins(:service_category)
+      .where(service_categories: { service_category: service_category })
+  }
 end

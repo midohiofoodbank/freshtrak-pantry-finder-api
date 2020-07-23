@@ -102,6 +102,13 @@ describe Api::AgenciesController, type: :controller do
     expect(response_body).to eq(expected_response(100.1, -190.9, false))
   end
 
+  it 'is indexable by service category' do
+    get '/api/agencies', service: event.service_category.id
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body).deep_symbolize_keys
+    expect(response_body).to eq(expected_response(nil, nil, false))
+  end
+
   def expected_response(lat = nil, long = nil, has_zip = true)
     {
       agencies: [

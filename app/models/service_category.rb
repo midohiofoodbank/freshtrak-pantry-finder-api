@@ -7,5 +7,5 @@ class ServiceCategory < ApplicationRecord
   has_many :service_types, foreign_key: :service_category1,
                            inverse_of: :service_category,
                            dependent: :restrict_with_exception
-  has_many :agencies, through: :event
+  has_many :events, through: :service_types
 end

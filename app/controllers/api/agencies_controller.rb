@@ -11,11 +11,11 @@ module Api
       if (@zip = search_params[:zip_code])
         @agencies = @agencies.by_zip_code(@zip)
       end
-      if (@service = search_params[:service])
-        @agencies = @agencies.by_service_category(@service)
-      end
       if (date = search_params[:event_date])
         @agencies = @agencies.with_event_after(date.delete('-'))
+      end
+      if (@service = search_params[:service])
+        @agencies = @agencies.by_service_category(@service)
       end
 
       render json: serialized_agencies
@@ -73,6 +73,7 @@ module Api
       ActiveModelSerializers::SerializableResource.new(@agencies,
                                                        user_location:
                                                        @user_location,
+                                                       service: @service,
                                                        zip_code: @zip)
                                                   .as_json
     end
