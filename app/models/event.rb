@@ -41,6 +41,16 @@ class Event < ApplicationRecord
     agency.loc_name
   end
 
+  scope :with_event_after, lambda { |date|
+    joins(:event_dates)
+      .where('event_dates.event_date_key >= ?', date)
+  }
+
+  scope :by_zip_code, lambda { |zip_code|
+    joins(:event_zip_codes)
+      .where(event_service_geographies: { geo_value: zip_code })
+  }
+
   scope :by_service_category, lambda { |service_category|
     joins(:service_category)
       .where(service_categories: { service_category: service_category })

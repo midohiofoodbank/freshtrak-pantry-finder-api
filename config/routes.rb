@@ -9,7 +9,7 @@ Jets.application.routes.draw do
       resources :event_hours, only: %i[index show] do
       end
     end
-    resources :events, only: :show
+    resources :events, only: %i[index show]
     resources :foodbanks, only: :index
   end
 
