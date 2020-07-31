@@ -154,7 +154,13 @@ describe Api::AgenciesController, type: :controller do
                   display_age_adult: form.max_age_child + 1,
                   display_age_senior: form.max_age_adult + 1
                 }
-              ]
+              ],
+              service_category:
+                {
+                  id: event.service_category.id,
+                  service_category_name:
+                    event.service_category.service_category_name
+                }
             }
           ]
         }

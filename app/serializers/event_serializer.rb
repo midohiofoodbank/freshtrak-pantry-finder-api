@@ -13,6 +13,7 @@ class EventSerializer < ActiveModel::Serializer
 
   has_many :event_dates
   has_many :forms
+  has_one :service_category
 
   def address
     return object.address1 if object.address2.nil?
