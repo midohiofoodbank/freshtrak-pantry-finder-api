@@ -5,6 +5,8 @@ module Api
   class BaseController < ApplicationController
     rescue_from ActiveRecord::RecordNotFound, with: :missing_record
 
+    private
+
     def missing_record
       render json: { message: "Couldn't find Record" }, status: 404
     end
