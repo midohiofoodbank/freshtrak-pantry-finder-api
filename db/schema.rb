@@ -392,6 +392,20 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["loc_id"], name: "loc_id"
   end
 
+  create_table "fb_text", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "Table to hold text that foodbanks want to publish on FreshTrak.com", force: :cascade do |t|
+    t.integer "fb_id", default: 0, null: false, comment: "Foodbank ID this piece of text is for"
+    t.text "text", null: false, comment: "The piece of text the foodbank wants to show on FreshTrak"
+    t.text "link_text", null: false, comment: "The inner content of <a></a> tag"
+    t.text "link_href", null: false, comment: "The href property of an <a></a> tag"
+    t.text "image_resource", null: false, comment: "The location of an externally hosted resource to display"
+    t.integer "order", limit: 1, default: 50, null: false, comment: "Order in which text should be shown on the page.", unsigned: true
+    t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "added_by", default: 0, null: false, unsigned: true
+    t.datetime "last_update"
+    t.integer "last_update_by", unsigned: true
+    t.integer "status_id", default: 1, null: false, unsigned: true
+  end
+
   create_table "foodbank_counties", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "fb_id", limit: 3, unsigned: true
     t.integer "fips", comment: "County Code", unsigned: true
@@ -739,6 +753,10 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "service_sub_category1", limit: 1, null: false, unsigned: true
     t.integer "regulated_service", limit: 1, default: 0, null: false, comment: "does this service typically require a USDA or State signature, this will be used to help audit signature requirements by location and event"
     t.integer "grocery_service_flag", limit: 1, default: 0, unsigned: true
+    t.integer "is_grocery_service", limit: 1, default: 0, unsigned: true
+    t.integer "is_produce_service", limit: 1, default: 0, unsigned: true
+    t.integer "is_meal_service", limit: 1, default: 0, unsigned: true
+    t.integer "is_other_service", limit: 1, default: 0, unsigned: true
     t.integer "organization_id", limit: 3, default: 0, null: false, unsigned: true
     t.string "logo", limit: 60, default: "", null: false
     t.string "notes", default: "", null: false
