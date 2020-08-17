@@ -9,6 +9,8 @@ class FoodbankSerializer < ActiveModel::Serializer
   attribute :fb_logo, key: :logo
   attributes :display_url, :fb_agency_locator_url, :fb_url, :fb_fano_url
 
+  has_many :fb_texts
+
   def address
     return object.address1 if object.address2.nil?
 
