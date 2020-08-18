@@ -13,8 +13,8 @@ class Foodbank < ApplicationRecord
   has_many :agencies, foreign_key: :primary_fb_id, inverse_of: :foodbank,
                       dependent: :restrict_with_exception
 
-  has_many :fb_texts, foreign_key: :fb_id, inverse_of: :foodbank,
-                      dependent: :restrict_with_exception
+  has_many :foodbank_texts, foreign_key: :fb_id, inverse_of: :foodbank,
+                            dependent: :restrict_with_exception
 
   default_scope { active }
 

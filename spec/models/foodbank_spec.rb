@@ -2,6 +2,7 @@
 
 describe Foodbank, type: :model do
   let(:foodbank) { create(:foodbank) }
+  let(:foodbank_text) { create(:foodbank_text) }
 
   it 'has many counties' do
     counties = 5.times.map { create(:county, foodbank_ids: foodbank.id) }
@@ -9,9 +10,13 @@ describe Foodbank, type: :model do
     expect(foodbank.counties.pluck(:fips)).to eq(counties.pluck(:fips))
   end
 
+  it 'has many foodbank texts' do
+    foodbank_texts = 5.times.map { create(:foodbank_text, foodbank: foodbank) }
+    expect(foodbank.foodbank_texts.pluck(:id)).to eq(foodbank_texts.pluck(:id))
+  end
+
   it 'has many agencies' do
     agencies = 5.times.map { create(:agency, foodbank: foodbank) }
-
     expect(foodbank.agencies.pluck(:id)).to eq(agencies.pluck(:id))
   end
 
