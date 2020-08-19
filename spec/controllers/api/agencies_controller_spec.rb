@@ -128,7 +128,6 @@ describe Api::AgenciesController, type: :controller do
               longitude: event.pt_longitude.to_f.to_s,
               agency_id: event.loc_id,
               name: event.event_name,
-              service: event.service_description,
               estimated_distance: Geo.distance_between(
                 OpenStruct.new(lat: lat, long: long), event
               ),

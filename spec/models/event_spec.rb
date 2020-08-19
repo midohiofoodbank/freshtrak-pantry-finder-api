@@ -26,10 +26,6 @@ describe Event, type: :model do
     expect(event.forms.pluck(:id)).to eq(forms.pluck(:id))
   end
 
-  it 'has a service description' do
-    expect(event.service_description).to eq('Choice Pantry')
-  end
-
   it 'has an agency name' do
     expect(event.agency_name).to eq(event.agency.loc_name)
   end
