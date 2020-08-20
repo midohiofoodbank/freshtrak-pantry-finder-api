@@ -7,8 +7,8 @@ FactoryBot.define do
     date_added { 'CURRENT_TIMESTAMP' }
     added_by { 0 }
     status_id { 1 }
-    text { Faker::Name.name }
-    link_text { Faker::Name.name }
+    text { Faker::Lorem.paragraph }
+    link_text { Faker::Lorem.paragraph }
     link_href { Faker::Internet.url }
     image_resource { Faker::Internet.url }
     foodbank
