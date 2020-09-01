@@ -24,4 +24,21 @@ class EventDate < ApplicationRecord
   scope :future, lambda {
     where('event_date_key >= ?', Date.today.to_s.delete('-'))
   }
+
+  def valid_registration
+    published? && capacity_not_full? && still_open?
+  end
+
+  def published?
+    status_publish == 1 && published_date_key <= Date.today.to_s.delete('-').to_i
+  end
+
+  def capacity_not_full?
+    reserved.to_i < capacity.to_i
+  end
+
+  def still_open?
+    DateTime.current < published_end_datetime
+  end
+
 end
