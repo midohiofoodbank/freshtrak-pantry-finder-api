@@ -83,5 +83,58 @@ describe EventDate, type: :model do
 
       expect(described_class.active).not_to be_empty
     end
+
+    it 'validates capacity less than reserved' do
+      event_date1 = create(:event_date, capacity: 10, reserved: 10)
+      event_date2 = create(:event_date, capacity: 10, reserved: 5)
+
+      expect(event_date1.capacity_not_full?).to eq(false)
+      expect(event_date2.capacity_not_full?).to eq(true)
+    end
+
+    it 'validates if reservations still open ' do
+      event_date1 = create(:event_date, published_end_datetime:
+        (DateTime.current.utc - 1.day).strftime('%Y-%m-%d %H:%M:%S'))
+      event_date2 = create(:event_date, published_end_datetime:
+        (DateTime.current.utc + 1.day).strftime('%Y-%m-%d %H:%M:%S'))
+
+      expect(event_date1.still_open?).to eq(false)
+      expect(event_date2.still_open?).to eq(true)
+    end
+
+    it 'validates if event is published ' do
+      event_date1 = create(:event_date, published_date_key:
+                          (Date.current + 1.day).to_s.delete('-').to_i)
+      event_date2 = create(:event_date, published_date_key:
+        (Date.current - 2.days).to_s.delete('-').to_i)
+
+      expect(event_date1.published?).to eq(false)
+      expect(event_date2.published?).to eq(true)
+    end
+
+    it 'validates and checks if capacity published and event is still open ' do
+      event_date1 = create(:event_date, capacity: 10, reserved: 10, published_date_key:
+                          (Date.today + 1.day).to_s.delete('-').to_i)
+      event_date2 = create(:event_date, capacity: 10, reserved: 10, published_end_datetime:
+                          (DateTime.current.utc - 1.day).strftime('%Y-%m-%d %H:%M:%S'))
+      errors1 = event_date1.valid_registration
+      errors2 = event_date2.valid_registration
+
+      expect(errors1.count).to eq(2)
+      expect(errors1[0]).to eq('Event is not published')
+      expect(errors1[1]).to eq('Reservation is full')
+
+      expect(errors2.count).to eq(2)
+      expect(errors2[0]).to eq('Reservation is full')
+      expect(errors2[1]).to eq('Reservation is closed')
+    end
+
+    it 'errors out if event date is valid ' do
+      event_date1 = create(:event_date, capacity: 10, reserved: 5, published_end_datetime:
+                          (DateTime.current.utc + 1.day).strftime('%Y-%m-%d %H:%M:%S'))
+      errors = event_date1.valid_registration
+
+      expect(errors.count).to eq(0)
+    end
   end
 end

@@ -26,7 +26,17 @@ class EventDate < ApplicationRecord
   }
 
   def valid_registration
-    published? && capacity_not_full? && still_open?
+    validation_errors = []
+    unless published?
+      validation_errors << 'Event is not published'
+    end
+    unless capacity_not_full?
+      validation_errors << 'Reservation is full'
+    end
+    unless still_open?
+      validation_errors << 'Reservation is closed'
+    end
+    validation_errors
   end
 
   def published?
@@ -40,5 +50,4 @@ class EventDate < ApplicationRecord
   def still_open?
     DateTime.current < published_end_datetime
   end
-
 end
