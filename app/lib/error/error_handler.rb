@@ -7,7 +7,7 @@ module Error
     def self.included(clazz)
       clazz.class_eval do
         rescue_from ActiveRecord::RecordNotFound do |e|
-          respond(:record_not_found, 404, e.to_s)
+          respond(:record_not_found, 404, capture_record_id(e))
         end
       end
     end
@@ -17,6 +17,13 @@ module Error
     def respond(error, status, message)
       json = Helpers::Render.json(error, status, message)
       render json: json, status: status
+    end
+
+    def capture_record_id(msg)
+      regex = Regexp.new('(.*?)\[', Regexp::IGNORECASE)
+      return unless (matches = msg.as_json.match(regex))
+
+      matches[1].strip
     end
   end
 end
