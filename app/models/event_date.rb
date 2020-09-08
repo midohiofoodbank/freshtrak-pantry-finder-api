@@ -2,6 +2,8 @@
 
 # A date when an event is happening
 class EventDate < ApplicationRecord
+  validates_with EventDateValidator
+
   alias_attribute :id, :event_date_id
   alias_attribute :date, :event_date_key
 
@@ -24,4 +26,17 @@ class EventDate < ApplicationRecord
   scope :future, lambda {
     where('event_date_key >= ?', Date.today.to_s.delete('-'))
   }
+
+  def open_slots
+    capacity - reserved
+  end
+
+  def published?
+    status_publish == 1 && published_date_key <=
+      Date.today.to_s.delete('-').to_i
+  end
+
+  def still_open?
+    DateTime.current < published_end_datetime
+  end
 end
