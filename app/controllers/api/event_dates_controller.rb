@@ -7,10 +7,14 @@ module Api
 
     # GET /api/event_dates/:id
     def show
-      render json:
-        ActiveModelSerializers::SerializableResource.new(
-          @event_date, event_hours: true, event_slots: true
-        ).as_json
+      if @event_date.valid?
+        render json:
+          ActiveModelSerializers::SerializableResource.new(
+            @event_date, event_hours: true, event_slots: true
+          ).as_json
+      else
+        render json: { errors: @event_date.errors }
+      end
     end
 
     private
