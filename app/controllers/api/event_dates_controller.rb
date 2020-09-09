@@ -14,7 +14,7 @@ module Api
     end
 
     def event_details
-      validation_errors = @event_date.valid_registration
+      validation_errors = @event_date.validate_registration
       if validation_errors.empty?
         render json:
           ActiveModelSerializers::SerializableResource.new(

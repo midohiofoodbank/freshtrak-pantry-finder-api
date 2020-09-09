@@ -25,22 +25,17 @@ class EventDate < ApplicationRecord
     where('event_date_key >= ?', Date.today.to_s.delete('-'))
   }
 
-  def valid_registration
+  def validate_registration
     validation_errors = []
-    unless published?
-      validation_errors << 'Event is not published'
-    end
-    unless capacity_not_full?
-      validation_errors << 'Reservation is full'
-    end
-    unless still_open?
-      validation_errors << 'Reservation is closed'
-    end
+    validation_errors << 'Event is not published' unless published?
+    validation_errors << 'Reservation is full' unless capacity_not_full?
+    validation_errors << 'Reservation is closed' unless still_open?
     validation_errors
   end
 
   def published?
-    status_publish == 1 && published_date_key <= Date.today.to_s.delete('-').to_i
+    status_publish == 1 &&
+      published_date_key <= Date.today.to_s.delete('-').to_i
   end
 
   def capacity_not_full?
