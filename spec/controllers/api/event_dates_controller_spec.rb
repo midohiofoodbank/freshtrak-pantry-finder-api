@@ -12,4 +12,12 @@ describe Api::EventDatesController, type: :controller do
     expect(event_date_response['id']).to eq(event_date.id)
     expect(event_date_response['capacity']).to eq(capacity)
   end
+
+  it 'returns error message when event_date is not found in database' do
+    get 'api/event_dates/-404'
+    event_date_response = JSON.parse(response.body)
+    expect(event_date_response['status']).to eq(404)
+    expect(event_date_response['error']).to eq('record_not_found')
+    expect(event_date_response['message']).not_to be(nil)
+  end
 end
