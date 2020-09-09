@@ -37,6 +37,6 @@ class EventDate < ApplicationRecord
   end
 
   def still_open?
-    DateTime.current < published_end_datetime
+    DateTime.current.utc.strftime('%Y-%m-%d %H:%M:%S') <= published_end_datetime
   end
 end

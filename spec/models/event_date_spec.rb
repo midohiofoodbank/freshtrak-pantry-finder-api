@@ -24,10 +24,15 @@ describe EventDate, type: :model do
     end
 
     it 'defaults to dates that have been published' do
-      create(:event_date, status_publish: 1,
-                          published_date_key: (Date.today + 2).to_s.delete('-'))
-      create(:event_date, status_publish: 0,
-                          published_date_key: (Date.today - 2).to_s.delete('-'))
+      event_date = create(:event_date,
+                          status_publish: 1,
+                          published_date_key: Date.today.to_s.delete('-'))
+
+      unpublished_event_date = build(:event_date,
+                                     status_publish: 0, service_id: 10,
+                                     published_date_key:
+                                     (Date.today - 2).to_s.delete('-'))
+      unpublished_event_date.save(validate: false)
 
       expected_event_id = event_date.id
       expect(described_class.all.pluck(:id)).to eq([expected_event_id])
@@ -64,8 +69,9 @@ describe EventDate, type: :model do
 
     it 'ignores event dates where current datetime > published_end_datetime' do
       # create event_date with published_end_datetime two days in the past
-      create(:event_date, published_end_datetime:
+      event_date = build(:event_date, service_id: 10, published_end_datetime:
              (DateTime.current - 2).utc.strftime('%Y-%m-%d %H:%M:%S'))
+      event_date.save(validate: false)
 
       expect(described_class.active).to be_empty
     end
@@ -83,5 +89,30 @@ describe EventDate, type: :model do
 
       expect(described_class.active).not_to be_empty
     end
+  end
+
+  it 'validates whether published' do
+    unpublished_event_date = build(:event_date,
+                                   status_publish: 0, published_date_key:
+                                   (Date.today - 2).to_s.delete('-'))
+    unpublished_event_date.valid?
+
+    expect(unpublished_event_date.errors[:event_date][0][:code]).to eq(1001)
+  end
+
+  it 'validates whether expired' do
+    expired_event_date =
+      build(:event_date, published_end_datetime:
+      (DateTime.current - 2).utc.strftime('%Y-%m-%d %H:%M:%S'))
+
+    expired_event_date.valid?
+    expect(expired_event_date.errors[:event_date][0][:code]).to eq(1003)
+  end
+
+  it 'validates whether at capacity' do
+    filled_event_date = build(:event_date, capacity: 50, reserved: 50)
+
+    filled_event_date.valid?
+    expect(filled_event_date.errors[:event_date][0][:code]).to eq(1002)
   end
 end
