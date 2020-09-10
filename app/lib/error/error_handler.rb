@@ -21,7 +21,7 @@ module Error
 
     def capture_record_id(msg)
       regex = Regexp.new('(.*?)\[', Regexp::IGNORECASE)
-      return unless (matches = msg.as_json.match(regex))
+      return msg unless (matches = msg.as_json.match(regex))
 
       matches[1].strip
     end
