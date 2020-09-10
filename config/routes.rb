@@ -8,6 +8,10 @@ Jets.application.routes.draw do
     resources :event_dates, only: :show do
       resources :event_hours, only: %i[index show] do
       end
+
+      member do
+        get :event_details
+      end
     end
     resources :events, only: :show
     resources :foodbanks, only: :index
