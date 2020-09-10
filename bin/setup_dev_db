@@ -5,8 +5,8 @@
 puts 'Seeding dev database'
 
 user = ENV.fetch('DB_USER', 'root')
-password = ENV.fetch('DB_PASS', 'rootuser')
-host = ENV.fetch('DB_HOST', '127.0.0.1')
+password = ENV.fetch('DB_PASS', '')
+host = ENV.fetch('DB_HOST', '')
 
 mysql_args = "-u #{user}"
 mysql_args += " -p#{password}" unless password.empty?
