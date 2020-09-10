@@ -3,8 +3,6 @@
 describe Api::EventDatesController, type: :controller do
   let(:capacity) { 37 }
   let(:event_date) { create(:event_date, capacity: capacity) }
-  let(:event_date1) { create(:event_date, capacity: 37, reserved: 37, published_date_key:
-                         (Date.today - 2).to_s.delete('-')) }
 
   it 'shows the event date' do
     get "/api/event_dates/#{event_date.id}"
@@ -29,12 +27,5 @@ describe Api::EventDatesController, type: :controller do
     expect(event_date_response['status']).to eq(404)
     expect(event_date_response['error']).to eq('record_not_found')
     expect(event_date_response['message']).not_to be(nil)
-  end
-
-  it 'shows the event validation errors' do
-    get "/api/event_dates/#{event_date1.id}/event_details"
-    event_date_response = JSON.parse(response.body)
-    expect(response.status).to eq 200
-    expect(event_date_response['errors'][0]).to eq('Reservation is full')
   end
 end
