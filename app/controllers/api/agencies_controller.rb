@@ -3,18 +3,17 @@
 module Api
   # Exposes the Agency location data
   class AgenciesController < Api::BaseController
+    before_action :permit_params
     before_action :set_agencies, only: [:index]
     before_action :set_user_location, only: [:index]
     before_action :set_agency, only: [:show]
 
     def index
-      if (@zip = search_params[:zip_code])
-        @agencies = @agencies.by_zip_code(@zip)
-      end
-      if (date = search_params[:event_date])
-        @agencies = @agencies.with_event_after(date.delete('-'))
-      end
-      by_event_date_on(search_params[:event_date_on])
+      by_zip(@zip)
+
+      by_event_date_after(@event_date)
+
+      by_event_date_on(@event_date_on)
 
       render json: serialized_agencies
     end
@@ -27,14 +26,21 @@ module Api
 
     private
 
-    def search_params
-      params.permit(:zip_code, :event_date, :event_date_on, :lat, :long)
+    def permit_params
+      params.permit(
+        :zip_code, :event_date, :event_date_on, :lat, :long
+      ).tap do |param|
+        @zip = param[:zip_code]
+        @event_date = param[:event_date]
+        @event_date_on = param[:event_date_on]
+        @lat = param[:lat]
+        @long = param[:long]
+      end
     end
 
     def set_agencies
       @agencies =
-        if !search_params[:zip_code] && !search_params[:event_date] &&
-           !search_params[:event_date_on]
+        if !@zip && !@event_date && !@event_date_on
           Agency.none
         else
           Agency.distinct
@@ -52,11 +58,9 @@ module Api
     # :zip_code paramter (used to calculate distance from the zip code
     # (centroid)
     def set_user_location
-      return unless (search_params[:lat] && search_params[:long]) ||
-                    search_params[:zip_code]
+      return unless (@lat && @long) || @zip
 
-      user_location_object(search_params[:lat], search_params[:long],
-                           search_params[:zip_code])
+      user_location_object(@lat, @long, @zip)
     end
 
     def user_location_object(lat, long, zip_code)
@@ -73,6 +77,18 @@ module Api
                                                        @user_location,
                                                        zip_code: @zip)
                                                   .as_json
+    end
+
+    def by_zip(zip)
+      return unless zip
+
+      @agencies = @agencies.by_zip_code(zip)
+    end
+
+    def by_event_date_after(event_date_after)
+      return unless event_date_after
+
+      @agencies = @agencies.with_event_after(event_date_after.delete('-'))
     end
 
     def by_event_date_on(event_date_on)
