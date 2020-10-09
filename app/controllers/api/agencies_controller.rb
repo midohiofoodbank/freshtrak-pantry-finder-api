@@ -14,6 +14,9 @@ module Api
       if (date = search_params[:event_date])
         @agencies = @agencies.with_event_after(date.delete('-'))
       end
+      by_zip_and_event_date_on(
+        search_params[:zip_code], search_params[:event_date_on]
+      )
 
       render json: serialized_agencies
     end
@@ -27,12 +30,13 @@ module Api
     private
 
     def search_params
-      params.permit(:zip_code, :event_date, :lat, :long)
+      params.permit(:zip_code, :event_date, :event_date_on, :lat, :long)
     end
 
     def set_agencies
       @agencies =
-        if !search_params[:zip_code] && !search_params[:event_date]
+        if !search_params[:zip_code] && !search_params[:event_date] &&
+           !search_params[:event_date_on]
           Agency.none
         else
           Agency.distinct
@@ -71,6 +75,13 @@ module Api
                                                        @user_location,
                                                        zip_code: @zip)
                                                   .as_json
+    end
+
+    def by_zip_and_event_date_on(zip_code, event_date_on)
+      return unless zip_code && event_date_on
+
+      @agencies = @agencies.by_zip_code(zip_code)
+                           .with_event_on(event_date_on.delete('-'))
     end
   end
 end

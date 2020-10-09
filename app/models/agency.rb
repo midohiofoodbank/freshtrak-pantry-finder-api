@@ -21,6 +21,11 @@ class Agency < ApplicationRecord
 
   scope :active, -> { where(status_id: 1) }
 
+  scope :with_event_on, lambda { |date|
+    joins(:event_dates)
+      .where('event_dates.event_date_key = ?', date)
+  }
+
   scope :with_event_after, lambda { |date|
     joins(:event_dates)
       .where('event_dates.event_date_key >= ?', date)
