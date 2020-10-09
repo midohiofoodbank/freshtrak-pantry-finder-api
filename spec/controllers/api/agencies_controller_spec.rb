@@ -63,6 +63,13 @@ describe Api::AgenciesController, type: :controller do
     expect(response_body).to eq(expected_response(zip_code.lat, zip_code.long))
   end
 
+  it 'is indexable by event_date_on' do
+    get '/api/agencies', event_date_on: date
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body).deep_symbolize_keys
+    expect(response_body).to eq(expected_response(nil, nil, false))
+  end
+
   it 'is indexable by zip_code and includes lat & long params' do
     get '/api/agencies', zip_code: event_zip_code.zip_code, lat: event.lat.to_s,
                          long: event.long.to_s
