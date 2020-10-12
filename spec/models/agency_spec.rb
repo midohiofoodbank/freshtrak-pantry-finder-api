@@ -81,21 +81,32 @@ describe Agency, type: :model do
       expect(agency_results.pluck(:id)).to eq(expected_agency_ids)
     end
 
-    it 'can find agencies with events today' do
-      agencies = 5.times.map do |i|
-        date = (Date.today + i).to_s.delete('-')
-        agency = create(:agency)
-        event = create(:event, agency: agency)
-        create(:event_date, event: event, date: date)
-        agency
+    context 'with scope event_on' do
+      let(:agencies) do
+        5.times.map do |i|
+          date = (Date.today + i).to_s.delete('-')
+          agency = create(:agency)
+          event = create(:event, agency: agency)
+          create(:event_date, event: event, date: date)
+          agency
+        end
       end
 
-      target_date = Date.today.to_s.delete('-')
+      it 'can find agencies with events today' do
+        target_date = Date.today.to_s.delete('-')
+        expected_agency_ids = agencies[0..0].pluck(:id)
 
-      expected_agency_ids = agencies[0..0].pluck(:id)
+        agency_results = described_class.with_event_on(target_date)
+        expect(agency_results.pluck(:id)).to eq(expected_agency_ids)
+      end
 
-      agency_results = described_class.with_event_on(target_date)
-      expect(agency_results.pluck(:id)).to eq(expected_agency_ids)
+      it "can't find agencies with events today" do
+        target_date = (Date.today + 1).to_s.delete('-')
+        expected_agency_ids = agencies[1..-1].pluck(:id)
+
+        agency_results = described_class.with_event_on(target_date)
+        expect(agency_results.pluck(:id)).not_to eq(expected_agency_ids)
+      end
     end
   end
 end
