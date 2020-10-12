@@ -11,7 +11,7 @@ module Api
     def index
       by_zip(@zip)
 
-      by_event_date_after(@event_date)
+      by_event_date_on_or_after(@event_date)
 
       by_event_date_on(@event_date_on)
 
@@ -85,7 +85,7 @@ module Api
       @agencies = @agencies.by_zip_code(zip)
     end
 
-    def by_event_date_after(event_date_after)
+    def by_event_date_on_or_after(event_date_after)
       return unless event_date_after
 
       @agencies = @agencies.with_event_after(event_date_after.delete('-'))
