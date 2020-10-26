@@ -89,6 +89,6 @@ FactoryBot.define do
     fb_volunteer_url { '' }
     fb_donate_url { '' }
     fb_food_donate_url { '' }
-    # twilio_phone_number { '' }
+    twilio_phone_number { '' }
   end
 end
