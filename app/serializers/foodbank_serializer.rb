@@ -8,6 +8,7 @@ class FoodbankSerializer < ActiveModel::Serializer
   attribute :fb_nickname, key: :nickname
   attribute :fb_logo, key: :logo
   attributes :display_url, :fb_agency_locator_url, :fb_url, :fb_fano_url
+  attribute :twilio_phone_number
 
   has_many :foodbank_texts
 

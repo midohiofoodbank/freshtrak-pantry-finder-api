@@ -436,6 +436,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string "state", limit: 10
     t.string "zip", limit: 15
     t.string "phone_public_help", limit: 30, default: "", null: false, comment: "Public phone number customers can call to get help."
+    t.string "twilio_phone_number", limit: 20, default: "+16144129063", comment: "phone number displayed as sender for FreshTrak confirmations"
     t.integer "fb_type_id", limit: 1, null: false, unsigned: true
     t.string "fb_logo", default: "", null: false
     t.string "fb_url", default: "", null: false, comment: "Foodbank general url for their website."
@@ -744,19 +745,21 @@ ActiveRecord::Schema.define(version: 0) do
   create_table "service_types", primary_key: "service_id", id: :integer, limit: 2, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "types of service and categories of service that a family might receive", force: :cascade do |t|
     t.string "service_desc", limit: 50, default: "", null: false
     t.string "service_desc_long", default: "", null: false
-    t.integer "meals_served", limit: 1, null: false, unsigned: true
+    t.integer "meals_served", limit: 1, default: 0, null: false, unsigned: true
     t.integer "form_type_id", limit: 1, default: 1, null: false, unsigned: true
     t.integer "grouping", limit: 2, default: 0, null: false, unsigned: true
     t.string "group_name", limit: 50, default: "", null: false
     t.integer "sub_grouping", limit: 2, default: 0, null: false, unsigned: true
-    t.integer "service_category1", limit: 1, null: false, unsigned: true
-    t.integer "service_sub_category1", limit: 1, null: false, unsigned: true
+    t.integer "service_category1", limit: 1, default: 0, null: false, unsigned: true
+    t.integer "service_sub_category1", limit: 1, default: 0, null: false
     t.integer "regulated_service", limit: 1, default: 0, null: false, comment: "does this service typically require a USDA or State signature, this will be used to help audit signature requirements by location and event"
     t.integer "grocery_service_flag", limit: 1, default: 0, unsigned: true
     t.integer "is_grocery_service", limit: 1, default: 0, unsigned: true
     t.integer "is_produce_service", limit: 1, default: 0, unsigned: true
     t.integer "is_meal_service", limit: 1, default: 0, unsigned: true
     t.integer "is_other_service", limit: 1, default: 0, unsigned: true
+    t.integer "is_01429_sg3", limit: 1, default: 0, unsigned: true
+    t.integer "is_01429_sg4", limit: 1, default: 0, unsigned: true
     t.integer "organization_id", limit: 3, default: 0, null: false, unsigned: true
     t.string "logo", limit: 60, default: "", null: false
     t.string "notes", default: "", null: false
