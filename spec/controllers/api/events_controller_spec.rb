@@ -26,4 +26,12 @@ describe Api::EventsController, type: :controller do
     response_body = JSON.parse(response.body)
     expect(response_body['events'].count).to eq(1)
   end
+
+  it 'it returns no results without parameters' do
+    event_date = create(:event_date, event: event)
+    get '/api/events'
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body)
+    expect(response_body['events'].count).to eq(0)
+  end
 end
