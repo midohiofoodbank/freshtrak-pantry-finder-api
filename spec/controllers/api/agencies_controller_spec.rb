@@ -134,6 +134,7 @@ describe Api::AgenciesController, type: :controller do
               exception_note: has_zip ? event_geography.exception_note : '',
               event_details: event.pub_desc_long,
               agency_name: agency.loc_name,
+              agency_phone: agency.phone,
               event_dates: [
                 {
                   id: event_date.id,

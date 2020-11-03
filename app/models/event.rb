@@ -41,4 +41,6 @@ class Event < ApplicationRecord
   def agency_name
     agency.loc_name
   end
+
+  delegate :phone, to: :agency, prefix: true
 end
