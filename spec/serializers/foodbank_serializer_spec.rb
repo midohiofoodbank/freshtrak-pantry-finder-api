@@ -2,6 +2,7 @@
 
 describe FoodbankSerializer do
   let(:foodbank_text) { create(:foodbank_text) }
+  let(:default_twilio_phone_number) { '+16144129063' }
 
   it 'JSON single addr, display_url is Config.default_fb_display_url' do
     serializer =
@@ -17,7 +18,9 @@ describe FoodbankSerializer do
     '"name":"local foodbank","nickname":"","logo":"",' \
     '"display_url":"https://www.feedingamerica.org/find-your-local-foodbank",' \
     '"fb_agency_locator_url":"",' \
-    '"fb_url":"","fb_fano_url":null,"foodbank_texts":[{"id":' \
+    '"fb_url":"","fb_fano_url":null,"twilio_phone_number":"' \
+    "#{default_twilio_phone_number}" \
+    '","foodbank_texts":[{"id":' \
     "#{foodbank_text.id}" \
     ',"image_resource":"' \
     "#{foodbank_text.image_resource}" \
@@ -27,9 +30,8 @@ describe FoodbankSerializer do
     "#{foodbank_text.link_text}" \
     '","link_href":"' \
     "#{foodbank_text.link_href}" \
-    '","order":50}]}'
-    puts serializer.to_json
-    puts exp_rslt
+    '","order":50}]}' \
+
     expect(serializer.to_json).to eql(exp_rslt)
   end
 
@@ -48,7 +50,9 @@ describe FoodbankSerializer do
                  '"logo":"","display_url":"' \
                  "#{Config.default_fb_display_url}" \
                  '","fb_agency_locator_url":"",' \
-                 '"fb_url":"","fb_fano_url":null,"foodbank_texts":[]}'
+                 '"fb_url":"","fb_fano_url":null,"twilio_phone_number":"' \
+                 "#{default_twilio_phone_number}" \
+                 '","foodbank_texts":[]}'
     expect(serializer.to_json).to eql(exp_rslt)
   end
 
@@ -68,7 +72,9 @@ describe FoodbankSerializer do
                  '"name":"local foodbank","nickname":"",' \
                  '"logo":"","display_url":"fb_agency_locator_url",' \
                  '"fb_agency_locator_url":"fb_agency_locator_url",'\
-                 '"fb_url":"","fb_fano_url":null,"foodbank_texts":[]}'
+                 '"fb_url":"","fb_fano_url":null,"twilio_phone_number":"' \
+                 "#{default_twilio_phone_number}" \
+                 '","foodbank_texts":[]}'
     expect(serializer.to_json).to eql(exp_rslt)
   end
 
@@ -85,7 +91,10 @@ describe FoodbankSerializer do
                  '"state":"OH","zip":"12345","phone":"999-999-9999",' \
                  '"name":"local foodbank","nickname":"","logo":"",' \
                  '"display_url":"fb_url","fb_agency_locator_url":"",' \
-                 '"fb_url":"fb_url","fb_fano_url":null,"foodbank_texts":[]}'
+                 '"fb_url":"fb_url","fb_fano_url":null,' \
+                 '"twilio_phone_number":"' \
+                 "#{default_twilio_phone_number}" \
+                 '","foodbank_texts":[]}'
     expect(serializer.to_json).to eql(exp_rslt)
   end
 
@@ -103,7 +112,9 @@ describe FoodbankSerializer do
                  '"name":"local foodbank","nickname":"","logo":"",' \
                  '"display_url":"fb_fano_url",' \
                  '"fb_agency_locator_url":"","fb_url":"",' \
-                 '"fb_fano_url":"fb_fano_url","foodbank_texts":[]}'
+                 '"fb_fano_url":"fb_fano_url","twilio_phone_number":"' \
+                 "#{default_twilio_phone_number}" \
+                 '","foodbank_texts":[]}'
     expect(serializer.to_json).to eql(exp_rslt)
   end
 end
