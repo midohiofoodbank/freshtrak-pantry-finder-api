@@ -8,7 +8,7 @@ class EventSerializer < ActiveModel::Serializer
   attribute :pt_longitude, key: :longitude
   attribute :event_name, key: :name
   attributes :estimated_distance, :exception_note, :event_details
-  attribute  :agency_name
+  attributes :agency_name, :agency_phone
 
   has_many :event_dates
   has_many :forms

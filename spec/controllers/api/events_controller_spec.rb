@@ -18,4 +18,20 @@ describe Api::EventsController, type: :controller do
     expect(event_response['error']).to eq('record_not_found')
     expect(event_response['message']).not_to be(nil)
   end
+
+  it 'is indexable by event_date_id' do
+    event_date = create(:event_date, event: event)
+    get '/api/events', event_date_id: event_date.id
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body)
+    expect(response_body['events'].count).to eq(1)
+  end
+
+  it 'returns no results without parameters' do
+    create(:event_date, event: event)
+    get '/api/events'
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body)
+    expect(response_body['events'].count).to eq(0)
+  end
 end

@@ -13,7 +13,7 @@ Jets.application.routes.draw do
         get :event_details
       end
     end
-    resources :events, only: :show
+    resources :events, only: %i[index show]
     resources :foodbanks, only: :index
   end
 

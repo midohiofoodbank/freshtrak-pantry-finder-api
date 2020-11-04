@@ -21,6 +21,11 @@ class Event < ApplicationRecord
   scope :published, -> { where(status_publish_event: 1) }
   scope :publishes_dates, -> { where(status_publish_event_dates: 1) }
 
+  scope :with_event_date_id, lambda { |event_date_id|
+    joins(:event_dates)
+      .where('event_dates.event_date_id = ?', event_date_id)
+  }
+
   def exception_note(zip_code)
     # if zip_code parameter submitted use it, otherwise use event.zip
     event_zip = if zip_code
@@ -36,4 +41,6 @@ class Event < ApplicationRecord
   def agency_name
     agency.loc_name
   end
+
+  delegate :phone, to: :agency, prefix: true
 end

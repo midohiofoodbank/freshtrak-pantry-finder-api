@@ -30,6 +30,10 @@ describe Event, type: :model do
     expect(event.agency_name).to eq(event.agency.loc_name)
   end
 
+  context 'when delegating methods to agency object' do
+    it { is_expected.to respond_to(:agency_phone) }
+  end
+
   context 'with scopes' do
     it 'defaults to active and published events' do
       create(:event, status_id: 0, status_publish_event: 0)
@@ -43,6 +47,18 @@ describe Event, type: :model do
       create(:event, status_publish_event_dates: 0)
       expected_id = event.id
       expect(described_class.publishes_dates.pluck(:id)).to eq([expected_id])
+    end
+
+    it 'can find an event with a specific event_date' do
+      event_date = create(:event_date, event: event)
+      expect(described_class.with_event_date_id(event_date.id).pluck(:id))
+        .to eq([event.id])
+    end
+
+    it 'cannot cannot find an event with a specific event_date' do
+      create(:event_date, event: event)
+      expect(described_class.with_event_date_id(-500).pluck(:id))
+        .not_to eq([event.id])
     end
   end
 end
