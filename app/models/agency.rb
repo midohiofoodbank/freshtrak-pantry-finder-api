@@ -40,4 +40,10 @@ class Agency < ApplicationRecord
     joins(:event_zip_codes)
       .where(event_service_geographies: { geo_value: zip_code })
   }
+
+  def estimated_distance(user_location)
+    return '' if user_location.nil?
+
+    Geo.distance_between(user_location, self)
+  end
 end
