@@ -90,7 +90,7 @@ module Api
 
       @agencies =
         @agencies.select do |ag|
-          ag.estimated_distance(@user_location).to_s <= distance
+          ag.estimated_distance(@user_location).to_f < distance.to_f
         end
     end
 
