@@ -88,7 +88,10 @@ module Api
     def by_zip_and_distance(zip, distance)
       return unless zip && distance
 
-      @agencies = @agencies.select { |ag| ag.estimated_distance(@user_location) <= distance.to_f }
+      @agencies =
+        @agencies.select do |ag|
+          ag.estimated_distance(@user_location).to_s <= distance
+        end
     end
 
     def with_event_after(date)
