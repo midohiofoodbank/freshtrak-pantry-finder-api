@@ -26,6 +26,11 @@ class Event < ApplicationRecord
       .where('event_dates.event_date_id = ?', event_date_id)
   }
 
+  scope :by_zip_code, lambda { |zip_code|
+    joins(:event_zip_codes)
+      .where(event_service_geographies: { geo_value: zip_code })
+  }
+
   def exception_note(zip_code)
     # if zip_code parameter submitted use it, otherwise use event.zip
     event_zip = if zip_code

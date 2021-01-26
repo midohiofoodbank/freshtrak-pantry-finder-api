@@ -25,4 +25,11 @@ class AgencySerializer < ActiveModel::Serializer
 
     Geo.distance_between(user_location, object)
   end
+
+  def events
+    zip_code = @instance_options[:zip_code]
+    return object.events if zip_code.nil?
+
+    object.events.by_zip_code(zip_code)
+  end
 end
