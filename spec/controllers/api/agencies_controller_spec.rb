@@ -24,6 +24,9 @@ describe Api::AgenciesController, type: :controller do
     other_foodbank = create(:foodbank, county_ids: other_zip.county.id)
     other_agency = create(:agency, foodbank: other_foodbank)
     other_event = create(:event, agency: other_agency)
+    other_event_geography = create(:event_geography)
+    create(:event_zip_code, event: other_event, zip_code: other_zip.zip_code,
+                            event_geography: other_event_geography)
     create(:event_date, event: other_event, date: other_date)
   end
 
@@ -47,6 +50,19 @@ describe Api::AgenciesController, type: :controller do
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
     expect(response_body).to eq(expected_response(zip_code.lat, zip_code.long))
+  end
+
+  it "won't include events by zip_code when event_zip_code <> zip" do
+    event2 = create(:event, agency: agency)
+    event_geography2 = create(:event_geography)
+    create(:event_zip_code, event: event2,
+                            event_geography: event_geography2)
+    get '/api/agencies', zip_code: event_zip_code.zip_code
+    expect(response.status).to eq 200
+    response_body = JSON.parse(response.body)
+    expect(agency.events.count).to eq 2
+    expect(response_body['agencies'].first['events'].count).to eq 1
+    expect(response_body['agencies'].first['events'].first['id']).to eq event.id
   end
 
   it 'is indexable by event_date' do
