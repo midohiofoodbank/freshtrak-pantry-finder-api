@@ -65,6 +65,39 @@ describe Agency, type: :model do
       expect(agency_results.pluck(:id)).to eq(agencies.pluck(:id))
     end
 
+    it 'can find agencies through a zip_code when event_zip_code matches zip' do
+      zip = create(:zip_code)
+
+      agencies = 5.times.map do
+        agency = create(:agency)
+        event = create(:event, agency: agency)
+        event_geography = create(:event_geography)
+        create(:event_zip_code, event: event, zip_code: zip.zip_code,
+                                event_geography: event_geography)
+        agency
+      end
+
+      agency_results = described_class.by_zip_code(zip.zip_code)
+
+      expect(agency_results.pluck(:id)).to eq(agencies.pluck(:id))
+    end
+
+    it "can't find agencies by zip_code when event_zip_code <> zip" do
+      zip = create(:zip_code)
+
+      5.times.map do
+        agency = create(:agency)
+        event = create(:event, agency: agency)
+        event_geography = create(:event_geography)
+        create(:event_zip_code, event: event,
+                                event_geography: event_geography)
+        agency
+      end
+
+      agency_results = described_class.by_zip_code(zip.zip_code)
+      expect(agency_results.count).to eq(0)
+    end
+
     it 'can find agencies with events after a date' do
       agencies = 5.times.map do |i|
         date = (Date.today + i).to_s.delete('-')

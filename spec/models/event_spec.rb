@@ -60,5 +60,36 @@ describe Event, type: :model do
       expect(described_class.with_event_date_id(-500).pluck(:id))
         .not_to eq([event.id])
     end
+
+    it 'can find events through a zip_code when event_zip_code matches zip' do
+      zip = create(:zip_code)
+
+      events = 5.times.map do
+        event = create(:event)
+        event_geography = create(:event_geography)
+        create(:event_zip_code, event: event, zip_code: zip.zip_code,
+                                event_geography: event_geography)
+        event
+      end
+
+      event_results = described_class.by_zip_code(zip.zip_code)
+
+      expect(event_results.pluck(:id)).to eq(events.pluck(:id))
+    end
+
+    it "can't find events by zip_code when event_zip_code <> zip" do
+      zip = create(:zip_code)
+
+      5.times.map do
+        event = create(:event)
+        event_geography = create(:event_geography)
+        create(:event_zip_code, event: event,
+                                event_geography: event_geography)
+        event
+      end
+
+      event_results = described_class.by_zip_code(zip.zip_code)
+      expect(event_results.count).to eq(0)
+    end
   end
 end
