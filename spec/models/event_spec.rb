@@ -55,10 +55,23 @@ describe Event, type: :model do
         .to eq([event.id])
     end
 
-    it 'cannot cannot find an event with a specific event_date' do
+    it 'cannot find an event with a specific event_date' do
       create(:event_date, event: event)
       expect(described_class.with_event_date_id(-500).pluck(:id))
         .not_to eq([event.id])
+    end
+
+    it 'can find an event with a specific Service Category' do
+      serv_type = event.service_type
+      service_category_name = serv_type.service_category[:service_category_name]
+      expect(described_class.by_service_category(service_category_name))
+        .to eq([event])
+    end
+
+    it 'cannot find an event with a wrong Service Category' do
+      service_category_name = 'Produce'
+      expect(described_class.by_service_category(service_category_name))
+        .to eq([])
     end
   end
 end
