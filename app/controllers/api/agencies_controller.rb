@@ -15,7 +15,11 @@ module Api
 
       with_event_after(@event_date)
 
-      render json: serialized_agencies
+      if @agencies.blank?
+        render json: {}
+      else
+        render json: serialized_agencies
+      end
     end
 
     # GET /api/agencies/:id
@@ -27,11 +31,11 @@ module Api
     private
 
     def permit_params
-      params.permit(
-        :zip_code, :distance, :event_date, :event_date_on, :lat, :long
-      ).tap do |param|
+      params.permit(:zip_code, :distance, :category,
+                    :event_date, :event_date_on, :lat, :long).tap do |param|
         @zip = param[:zip_code]
         @distance = param[:distance]
+        @category = param[:category]
         @event_date = param[:event_date]
         @lat = param[:lat]
         @long = param[:long]
@@ -40,7 +44,7 @@ module Api
 
     def set_agencies
       @agencies =
-        if !@zip && !@distance && !@event_date
+        if !@zip && !@distance && !@event_date && !@category
           Agency.none
         else
           Agency.distinct
@@ -75,7 +79,8 @@ module Api
       ActiveModelSerializers::SerializableResource.new(@agencies,
                                                        user_location:
                                                        @user_location,
-                                                       zip_code: @zip)
+                                                       zip_code: @zip,
+                                                       category: @category)
                                                   .as_json
     end
 
