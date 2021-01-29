@@ -28,8 +28,13 @@ class AgencySerializer < ActiveModel::Serializer
 
   def events
     zip_code = @instance_options[:zip_code]
-    return object.events if zip_code.nil?
-
-    object.events.by_zip_code(zip_code)
+    category = @instance_options[:category]
+    if zip_code && category
+      object.events.by_zip_code(zip_code).by_service_category(category)
+    elsif zip_code
+      object.events.by_zip_code(zip_code)
+    else
+      object.events
+    end
   end
 end

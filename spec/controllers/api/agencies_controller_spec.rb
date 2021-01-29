@@ -39,7 +39,7 @@ describe Api::AgenciesController, type: :controller do
     get '/api/agencies'
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body)
-    expect(response_body['agencies']).to be_empty
+    expect(response_body).to be_empty
   end
 
   it 'is indexable by zip_code' do
