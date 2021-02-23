@@ -11,6 +11,7 @@ FactoryBot.define do
     link_text { Faker::Lorem.paragraph }
     link_href { Faker::Internet.url }
     image_resource { Faker::Internet.url }
+    eligibility_body { Faker::Lorem.paragraph }
     foodbank
   end
 end
