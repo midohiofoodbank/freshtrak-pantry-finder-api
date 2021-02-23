@@ -399,6 +399,10 @@ ActiveRecord::Schema.define(version: 0) do
     t.text "link_href", null: false, comment: "The href property of an <a></a> tag"
     t.text "image_resource", null: false, comment: "The location of an externally hosted resource to display"
     t.integer "order", limit: 1, default: 50, null: false, comment: "Order in which text should be shown on the page.", unsigned: true
+    t.integer "show_eligibilty_box", limit: 1, default: 0, unsigned: true
+    t.text "eligibility_header", comment: "optional text that will paint an Eligibilty box on FreshTrak public"
+    t.text "eligibility_body", null: false, comment: "optional text that will paint an Eligibilty box on FreshTrak public"
+    t.text "eligibility_footer", comment: "optional text that will paint an Eligibilty box on FreshTrak public"
     t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "added_by", default: 0, null: false, unsigned: true
     t.datetime "last_update"
@@ -601,9 +605,9 @@ ActiveRecord::Schema.define(version: 0) do
     t.string "notes", default: "", null: false
     t.integer "max_age_child", limit: 1, null: false, unsigned: true
     t.integer "max_age_adult", limit: 1, null: false, unsigned: true
-    t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }
     t.string "added_by", limit: 50, default: "", null: false
-    t.timestamp "last_update", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.timestamp "last_update"
     t.string "last_update_by", limit: 60, default: "", null: false
     t.integer "status_id", limit: 1, null: false, unsigned: true
   end
@@ -617,6 +621,20 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "last_update"
     t.integer "last_update_by", comment: "user_id of the last person to update this record", unsigned: true
     t.integer "status_id", limit: 1, default: 1, null: false, comment: "status of the record, uses codes from table status_codes", unsigned: true
+  end
+
+  create_table "languages", primary_key: "language_id", id: :integer, limit: 2, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
+    t.string "language_desc", limit: 75, default: "", null: false
+    t.string "language_initials", limit: 10, default: "", null: false
+    t.integer "grouping", limit: 2, default: 0, null: false, unsigned: true
+    t.string "group_name", limit: 50, default: "", null: false
+    t.integer "sub_grouping", limit: 2, default: 0, null: false, unsigned: true
+    t.string "notes", default: "", null: false
+    t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }
+    t.string "added_by", limit: 50, default: "", null: false
+    t.timestamp "last_update", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.string "last_update_by", limit: 60, default: "", null: false
+    t.column "active", "enum('Yes','No')", default: "Yes", null: false
   end
 
   create_table "locations", primary_key: "loc_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "agencies as defined by their supporting food bank, typically a single physical site that operates one of more events (programs)", force: :cascade do |t|
@@ -718,9 +736,9 @@ ActiveRecord::Schema.define(version: 0) do
     t.text "sc_monthly_30", null: false, comment: "the monthly trend for this month, and the preceeding 12 for the service category"
     t.text "sc_monthly_35", null: false, comment: "the monthly trend for this month, and the preceeding 12 for the service category"
     t.text "sc_monthly_40", null: false, comment: "the monthly trend for this month, and the preceeding 12 for the service category "
-    t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }
     t.string "added_by", limit: 150, default: "", null: false
-    t.timestamp "last_update", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "last_update", default: -> { "CURRENT_TIMESTAMP" }
     t.integer "last_update_by", null: false, unsigned: true
     t.integer "status_id", limit: 1, default: 0, null: false, unsigned: true
     t.index ["fips"], name: "fips"
@@ -776,7 +794,7 @@ ActiveRecord::Schema.define(version: 0) do
   create_table "types_service_geography", primary_key: "geo_type_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "geo_type_name", limit: 25, default: "", null: false, collation: "utf8mb4_general_ci", comment: "The type of geography this respresents, e.g. zip codes, CNTY, etc... "
     t.text "geo_type_notes"
-    t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }
     t.integer "added_by", null: false, comment: "user_id of the person that created this record", unsigned: true
     t.datetime "last_update"
     t.integer "last_update_by", null: false, comment: "user_id of the last person to update this record", unsigned: true
