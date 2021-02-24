@@ -16,7 +16,11 @@ describe FoodbankTextSerializer do
         'text' => foodbank_text.text,
         'link_text' => foodbank_text.link_text,
         'link_href' => foodbank_text.link_href,
-        'order' => foodbank_text.order
+        'order' => foodbank_text.order,
+        'show_eligibilty_box' => foodbank_text.show_eligibilty_box,
+        'eligibility_header' => foodbank_text.eligibility_header,
+        'eligibility_body' => foodbank_text.eligibility_body,
+        'eligibility_footer' => foodbank_text.eligibility_footer
       }
     end
   end
