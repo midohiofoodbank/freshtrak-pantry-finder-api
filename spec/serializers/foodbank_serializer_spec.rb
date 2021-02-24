@@ -30,7 +30,13 @@ describe FoodbankSerializer do
     "#{foodbank_text.link_text}" \
     '","link_href":"' \
     "#{foodbank_text.link_href}" \
-    '","order":50}]}' \
+    '","order":50,"show_eligibilty_box":1,"eligibility_header":"' \
+    "#{foodbank_text.eligibility_header}" \
+    '","eligibility_body":"' \
+    "#{foodbank_text.eligibility_body}" \
+    '","eligibility_footer":"' \
+    "#{foodbank_text.eligibility_footer}" \
+    '"}]}' \
 
     expect(serializer.to_json).to eql(exp_rslt)
   end
