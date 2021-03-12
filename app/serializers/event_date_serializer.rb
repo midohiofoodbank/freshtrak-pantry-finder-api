@@ -2,7 +2,7 @@
 
 # Serializer to strip away the cruft in the event_dates table
 class EventDateSerializer < ApplicationSerializer
-  attributes :id, :event_id, :capacity
+  attributes :id, :event_id, :capacity, :reserved
   attributes :accept_walkin, :accept_reservations, :accept_interest
   attribute :start_time
   attribute :end_time

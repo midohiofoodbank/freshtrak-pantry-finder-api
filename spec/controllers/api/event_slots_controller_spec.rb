@@ -2,6 +2,7 @@
 
 describe Api::EventSlotsController, type: :controller do
   let(:capacity) { 10 }
+  # let(:reserved) { 9 }
   let(:event_slot) { create(:event_slot, capacity: capacity) }
 
   it 'shows the event date' do
@@ -10,5 +11,6 @@ describe Api::EventSlotsController, type: :controller do
     event_slot_response = JSON.parse(response.body)['event_slot']
     expect(event_slot_response['event_slot_id']).to eq(event_slot.id)
     expect(event_slot_response['capacity']).to eq(capacity)
+    # expect(event_slot_response['reserved']).to eq(capacity)
   end
 end

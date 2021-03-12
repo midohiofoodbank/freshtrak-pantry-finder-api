@@ -15,6 +15,7 @@ describe EventDateSerializer do
         'id' => event_date.id,
         'event_id' => event_date.event_id,
         'capacity' => event_date.capacity,
+        'reserved' => event_date.reserved,
         'accept_walkin' => event_date.accept_walkin,
         'accept_reservations' => event_date.accept_reservations,
         'accept_interest' => event_date.accept_interest,

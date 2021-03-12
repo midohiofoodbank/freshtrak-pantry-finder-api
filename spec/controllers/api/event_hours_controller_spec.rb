@@ -54,6 +54,7 @@ describe Api::EventHoursController, type: :controller do
     {
       'event_slot_id' => event_slot.event_slot_id,
       'capacity' => event_slot.capacity,
+      'reserved' => event_slot.reserved,
       'start_time' => format_time_key(event_slot.start_time_key.to_s),
       'end_time' => format_time_key(event_slot.end_time_key.to_s),
       'open_slots' => event_slot.capacity - event_slot.reserved
@@ -67,6 +68,7 @@ describe Api::EventHoursController, type: :controller do
         'id' => event_date.id,
         'event_id' => event_date.event_id,
         'capacity' => event_date.capacity,
+        'reserved' => event_date.reserved,
         'accept_walkin' => event_date.accept_walkin,
         'accept_reservations' => event_date.accept_reservations,
         'accept_interest' => event_date.accept_interest,
@@ -76,12 +78,14 @@ describe Api::EventHoursController, type: :controller do
         'event_hours' => [{
           'event_hour_id' => event_hour.event_hour_id,
           'capacity' => event_hour.capacity,
+          'reserved' => event_hour.reserved,
           'start_time' => format_time_key(event_hour.start_time_key.to_s),
           'end_time' => format_time_key(event_hour.end_time_key.to_s),
           'open_slots' => event_hour.capacity - event_hour.reserved,
           'event_slots' => [{
             'event_slot_id' => event_slot.event_slot_id,
             'capacity' => event_slot.capacity,
+            'reserved' => event_slot.reserved,
             'start_time' => format_time_key(event_slot.start_time_key.to_s),
             'end_time' => format_time_key(event_slot.end_time_key.to_s),
             'open_slots' => event_slot.capacity - event_slot.reserved

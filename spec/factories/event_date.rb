@@ -8,7 +8,7 @@ FactoryBot.define do
     status_id { 1 }
     status_publish { 1 }
     capacity { 25 }
-    reserved { 0 }
+    reserved { 24 }
     start_time_key { 1000 }
     end_time_key { 1800 }
     event_duration_hours { 1 }
