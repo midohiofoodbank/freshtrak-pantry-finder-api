@@ -12,4 +12,8 @@ class EventDateSerializer < ApplicationSerializer
   end
 
   has_many :event_hours, if: -> { @instance_options[:event_hours] }
+
+  def reserved
+  	object.event_reserved_count
+  end 	
 end
