@@ -572,6 +572,7 @@ ActiveRecord::Schema.define(version: 0) do
   create_table "forms", primary_key: "form_id", id: :integer, limit: 2, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "will include all PT forms for both client and agency level electronic signatures", force: :cascade do |t|
     t.string "form_num", limit: 50, default: "", null: false
     t.string "form_master_num", limit: 50, default: "", null: false
+    t.integer "income_limits_form_id", limit: 2, default: 0, comment: "which group of income limit reccords should be used, states that have multiple forms in different languages can just use 1 master entry here", unsigned: true
     t.string "form_name", limit: 100, default: "", null: false
     t.string "form_display_file"
     t.string "form_submit_file"
@@ -597,6 +598,11 @@ ActiveRecord::Schema.define(version: 0) do
     t.string "income_limits_file"
     t.decimal "fpl_level", precision: 6, scale: 3, comment: "fpl multiplier for this program"
     t.string "form_source", default: "", null: false
+    t.integer "use_annual_limit", limit: 1, default: 0, comment: "does this form display Annual income limits", unsigned: true
+    t.integer "use_monthly_limit", limit: 1, default: 0, null: false, comment: "does this form display Monthly income limits", unsigned: true
+    t.integer "use_twice_monthly_limit", limit: 1, default: 0, comment: "does this form display Twice Monthly income limits", unsigned: true
+    t.integer "use_bi_weekly_limit", limit: 1, default: 0, comment: "does this form display Bi Weekly income limits", unsigned: true
+    t.integer "use_weekly_limit", limit: 1, default: 0, comment: "does this form display Weekly income limits", unsigned: true
     t.integer "grouping", limit: 2, default: 0, null: false, comment: "1-TEFAP 2_generic 3-csfp 4-disclosure 5-application 6-client_privacy 7-agency_privacy 8-agency_contract", unsigned: true
     t.string "group_name", limit: 50, default: "", null: false
     t.integer "sub_grouping", limit: 2, default: 0, null: false, unsigned: true
