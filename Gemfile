@@ -2,8 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'jets', git: 'https://github.com/tongueroo/jets.git',
-            submodules: true, branch: 'master'
+gem 'jets', '~> 3.0.5'
 
 # Include mysql2 gem if you are using ActiveRecord, remove next line
 # and config/database.yml file if you are not
