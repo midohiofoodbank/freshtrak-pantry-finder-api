@@ -29,9 +29,7 @@ describe Api::EventDatesController, type: :controller do
 
     get "api/event_dates/#{expired_event_date.event_date_id}"
     record = JSON.parse(response.body)
-
-    expect(record['errors']['event_date'][0]['code']).to eq(1003)
-    expect(record['errors']['event_date'][0]['message']).not_to be(nil)
+    expect(record.dig('errors', 'event_date')[0]).not_to be(nil)
   end
 
   it 'returns multiple validaton error messages' do

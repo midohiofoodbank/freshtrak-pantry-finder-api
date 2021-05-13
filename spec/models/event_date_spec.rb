@@ -97,7 +97,9 @@ describe EventDate, type: :model do
                                    (Date.today - 2).to_s.delete('-'))
     unpublished_event_date.valid?
 
-    expect(unpublished_event_date.errors[:event_date][0][:code]).to eq(1001)
+    expect(unpublished_event_date.errors[:event_date][0]).to eq(
+      'event is not published'
+    )
   end
 
   it 'validates whether expired' do
@@ -106,13 +108,19 @@ describe EventDate, type: :model do
       (DateTime.current - 2).utc.strftime('%Y-%m-%d %H:%M:%S'))
 
     expired_event_date.valid?
-    expect(expired_event_date.errors[:event_date][0][:code]).to eq(1003)
+
+    expect(expired_event_date.errors[:event_date][0]).to eq(
+      'event expired and reservations closed'
+    )
   end
 
   it 'validates whether at capacity' do
     filled_event_date = build(:event_date, capacity: 50, reserved: 50)
 
     filled_event_date.valid?
-    expect(filled_event_date.errors[:event_date][0][:code]).to eq(1002)
+
+    expect(filled_event_date.errors[:event_date][0]).to eq(
+      'event is at capacity'
+    )
   end
 end
