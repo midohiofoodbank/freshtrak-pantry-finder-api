@@ -2,8 +2,8 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 0) do
 
-  create_table "CNTY", primary_key: "FIPS", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "list of all counties in the US, we use this table in the ETL process each December that downloads all the ACS data, county by county", force: :cascade do |t|
+  create_table "CNTY", primary_key: "FIPS", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "list of all counties in the US, we use this table in the ETL process each December that downloads all the ACS data, county by county", force: :cascade do |t|
     t.string "NAME", limit: 25
     t.string "STATE", limit: 2
     t.string "fips_five_digit", limit: 5
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["fips_five_digit"], name: "fivedigitfips"
   end
 
-  create_table "dim_dates", primary_key: "date_key", id: :integer, unsigned: true, default: nil, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "dim_dates", primary_key: "date_key", id: { type: :integer, unsigned: true, default: nil }, charset: "utf8", force: :cascade do |t|
     t.date "date_m"
     t.string "FullDate", limit: 10
     t.string "DateName", limit: 10
@@ -97,7 +97,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "UTCMonth", limit: 1, unsigned: true
   end
 
-  create_table "dim_minutes", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "dim_minutes", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "minute_key", limit: 1
     t.string "minute_common", limit: 2
     t.string "minute_2", limit: 2
@@ -113,7 +113,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string "minute_60", limit: 2
   end
 
-  create_table "dim_times", primary_key: "time_key", id: :integer, unsigned: true, default: nil, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", comment: "Table that holds the time dimension linking to timekey in other tables", force: :cascade do |t|
+  create_table "dim_times", primary_key: "time_key", id: { type: :integer, comment: "the time key that is this record e.g. 1, 1440 (2:40 PM)", unsigned: true, default: nil }, charset: "utf8", comment: "Table that holds the time dimension linking to timekey in other tables", force: :cascade do |t|
     t.integer "minute_of_day", null: false, comment: "the minute of the day. minutes past midnight.", unsigned: true
     t.integer "hour_of_day", null: false, unsigned: true
     t.string "short_time", limit: 5, null: false
@@ -130,7 +130,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "status_id", default: 1, null: false, unsigned: true
   end
 
-  create_table "event_dates", primary_key: "event_date_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "Record of when the event is offering their services. Used to manage capacity, generate event_hours and event_slots, and other notes.", force: :cascade do |t|
+  create_table "event_dates", primary_key: "event_date_id", id: { type: :integer, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "Record of when the event is offering their services. Used to manage capacity, generate event_hours and event_slots, and other notes.", force: :cascade do |t|
     t.integer "esp_id", default: 0, null: false, comment: "The event_service_profile this event_date is linked to. All event_dates should be linked at least through an ad hoc profile."
     t.integer "event_id", null: false, unsigned: true
     t.integer "event_date_key", null: false, unsigned: true
@@ -168,7 +168,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["status_id"], name: "status_id"
   end
 
-  create_table "event_geography_profiles", primary_key: "egp_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "The geographies an agency does and does not serve along with notes", force: :cascade do |t|
+  create_table "event_geography_profiles", primary_key: "egp_id", id: { type: :integer, comment: "primary key of the table, represents a single geography profile, for a single event within an agency", unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "The geographies an agency does and does not serve along with notes", force: :cascade do |t|
     t.integer "event_id", default: 0, null: false, comment: "Event ID this esg record applies to.", unsigned: true
     t.integer "geo_profile_type_id", limit: 1, default: 1, null: false, comment: "The type of geography this respresents, e.g. specific zip codes, all zip codes in CNTY, etc... ", unsigned: true
     t.string "geo_profile_value", limit: 100, comment: "The geography value matched with the geo_profile_type_id, e.g. All zip codes in Franklin County Ohio would be represnted by geo_profile_type_id = 2 & geo_value = 39049."
@@ -186,7 +186,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["status_id"], name: "status_id"
   end
 
-  create_table "event_hours", primary_key: "event_hour_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "Record of what hours, connected to the event_dates, are available to order on, with controls for capacity. Also allows for split shifts and early closures because of low reservations.", force: :cascade do |t|
+  create_table "event_hours", primary_key: "event_hour_id", id: { type: :integer, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "Record of what hours, connected to the event_dates, are available to order on, with controls for capacity. Also allows for split shifts and early closures because of low reservations.", force: :cascade do |t|
     t.integer "event_date_id", null: false, unsigned: true
     t.integer "capacity", null: false, comment: "The total number of appointments that can be scheduled in event_slots that roll up to this event_hour record. e.g. 25"
     t.integer "reserved", null: false, comment: "The total number of appointments that have been scheduled in event_slots that roll up to this event_hour record. e.g. 20. This number should always be less than or equal to the capacity number."
@@ -203,7 +203,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["status_id"], name: "status_id"
   end
 
-  create_table "event_service_geographies", primary_key: "esg_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "The geographies an agency does and does not serve along with", force: :cascade do |t|
+  create_table "event_service_geographies", primary_key: "esg_id", id: { type: :integer, comment: "primary key of the table, represents a single geography, for a single agency", unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "The geographies an agency does and does not serve along with", force: :cascade do |t|
     t.integer "egp_id", default: 0, null: false, comment: "The event geography profile record that generated this event_service_geography", unsigned: true
     t.integer "event_id", default: 0, null: false, comment: "Event ID this esg record applies to.", unsigned: true
     t.integer "geo_type_id", limit: 1, default: 1, null: false, comment: "1-zip code , others from AT file select_list_arrays", unsigned: true
@@ -225,7 +225,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["status_id"], name: "status_id"
   end
 
-  create_table "event_service_profiles", primary_key: "esp_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "event_service_profiles", primary_key: "esp_id", id: { type: :integer, comment: "event_schedule_profile_id" }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "event_id", null: false, comment: "The event_id the event_service_profile belongs to"
     t.integer "service_id", comment: "The default service type provided through the event"
     t.integer "frequency_type_id", comment: "Frequency, e.g. Every, 1st, 2nd, etc..."
@@ -261,7 +261,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["generate_status_id"], name: "generate_status"
   end
 
-  create_table "event_slots", primary_key: "event_slot_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "Record of a slot of time that appointments can be scheduled into.", force: :cascade do |t|
+  create_table "event_slots", primary_key: "event_slot_id", id: { type: :integer, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "Record of a slot of time that appointments can be scheduled into.", force: :cascade do |t|
     t.integer "event_hour_id", null: false, unsigned: true
     t.integer "capacity", null: false, comment: "The total number of appointments that can be scheduled in this event_slot e.g. 6 (100 event_date capacity / 4 hours = 25 appointments per hour. 25 appointments per hour / (60 minutes per hour / 15 minutes per slot) = 6.25 = 6 appointments per slot."
     t.integer "reserved", null: false, comment: "The total number of appointments that have been scheduled in this event_slots e.g. 5. This number should always be less than or equal to the capacity number."
@@ -278,7 +278,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["status_id"], name: "status_id"
   end
 
-  create_table "events", primary_key: "event_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "programs operated by locations (agencies), each has a specific default type of service (service_type_id)", force: :cascade do |t|
+  create_table "events", primary_key: "event_id", id: { type: :integer, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "programs operated by locations (agencies), each has a specific default type of service (service_type_id)", force: :cascade do |t|
     t.integer "event_num", default: 0, null: false
     t.string "event_name", limit: 80, default: "", null: false
     t.string "event_nickname", limit: 40, default: "", null: false
@@ -392,7 +392,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["loc_id"], name: "loc_id"
   end
 
-  create_table "fb_text", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "Table to hold text that foodbanks want to publish on FreshTrak.com", force: :cascade do |t|
+  create_table "fb_text", id: { type: :integer, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "Table to hold text that foodbanks want to publish on FreshTrak.com", force: :cascade do |t|
     t.integer "fb_id", default: 0, null: false, comment: "Foodbank ID this piece of text is for"
     t.text "text", null: false, comment: "The piece of text the foodbank wants to show on FreshTrak"
     t.text "link_text", null: false, comment: "The inner content of <a></a> tag"
@@ -410,7 +410,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "status_id", default: 1, null: false, unsigned: true
   end
 
-  create_table "foodbank_counties", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "foodbank_counties", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "fb_id", limit: 3, unsigned: true
     t.integer "fips", comment: "County Code", unsigned: true
     t.string "fips_five_digit", limit: 5, default: ""
@@ -431,7 +431,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "status_id", limit: 1, default: 1, unsigned: true
   end
 
-  create_table "foodbanks_mini", primary_key: "fb_id", id: :integer, limit: 3, unsigned: true, default: nil, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "foodbanks_mini", primary_key: "fb_id", id: { type: :integer, limit: 3, unsigned: true, default: nil }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "fb_name", limit: 80, default: "", null: false
     t.string "fb_nickname", limit: 40, default: "", null: false
     t.string "address1", limit: 80
@@ -569,7 +569,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "status_id", limit: 1, null: false, unsigned: true
   end
 
-  create_table "forms", primary_key: "form_id", id: :integer, limit: 2, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "will include all PT forms for both client and agency level electronic signatures", force: :cascade do |t|
+  create_table "forms", primary_key: "form_id", id: { type: :integer, limit: 2, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "will include all PT forms for both client and agency level electronic signatures", force: :cascade do |t|
     t.string "form_num", limit: 50, default: "", null: false
     t.string "form_master_num", limit: 50, default: "", null: false
     t.integer "income_limits_form_id", limit: 2, default: 0, comment: "which group of income limit reccords should be used, states that have multiple forms in different languages can just use 1 master entry here", unsigned: true
@@ -618,7 +618,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "status_id", limit: 1, null: false, unsigned: true
   end
 
-  create_table "geography_profile_types", primary_key: "geo_profile_type_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "geography_profile_types", primary_key: "geo_profile_type_id", id: { type: :integer, comment: "primary key of the table, represents a single type of geography profile", unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "geo_profile_type_name", limit: 25, default: "", null: false, collation: "utf8mb4_general_ci", comment: "The type of geography this respresents, e.g. specific zip codes, all zip codes in CNTY, etc... "
     t.string "geo_profile_notes"
     t.text "use_instructions"
@@ -629,7 +629,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "status_id", limit: 1, default: 1, null: false, comment: "status of the record, uses codes from table status_codes", unsigned: true
   end
 
-  create_table "languages", primary_key: "language_id", id: :integer, limit: 2, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "languages", primary_key: "language_id", id: { type: :integer, limit: 2, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "language_desc", limit: 75, default: "", null: false
     t.string "language_initials", limit: 10, default: "", null: false
     t.integer "grouping", limit: 2, default: 0, null: false, unsigned: true
@@ -643,7 +643,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.column "active", "enum('Yes','No')", default: "Yes", null: false
   end
 
-  create_table "locations", primary_key: "loc_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "agencies as defined by their supporting food bank, typically a single physical site that operates one of more events (programs)", force: :cascade do |t|
+  create_table "locations", primary_key: "loc_id", id: { type: :integer, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "agencies as defined by their supporting food bank, typically a single physical site that operates one of more events (programs)", force: :cascade do |t|
     t.string "loc_num", limit: 20, default: "", null: false
     t.integer "org_id", default: 0, null: false, unsigned: true
     t.integer "parent_id", limit: 2, default: 0, null: false, unsigned: true
@@ -754,7 +754,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["state"], name: "state"
   end
 
-  create_table "service_categories", primary_key: "service_category", id: :integer, unsigned: true, default: nil, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "categories of services that summary the service types.", force: :cascade do |t|
+  create_table "service_categories", primary_key: "service_category", id: { type: :integer, unsigned: true, default: nil }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "categories of services that summary the service types.", force: :cascade do |t|
     t.string "service_category_name", limit: 50, default: "", null: false
     t.string "service_category_desc", default: "", null: false
     t.string "color", limit: 20, default: "#FF0080", null: false
@@ -766,7 +766,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "status_id", limit: 1, default: 2, null: false, unsigned: true
   end
 
-  create_table "service_types", primary_key: "service_id", id: :integer, limit: 2, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", comment: "types of service and categories of service that a family might receive", force: :cascade do |t|
+  create_table "service_types", primary_key: "service_id", id: { type: :integer, limit: 2, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", comment: "types of service and categories of service that a family might receive", force: :cascade do |t|
     t.string "service_desc", limit: 50, default: "", null: false
     t.string "service_desc_long", default: "", null: false
     t.integer "meals_served", limit: 1, default: 0, null: false, unsigned: true
@@ -797,7 +797,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["sub_grouping"], name: "sg"
   end
 
-  create_table "types_service_geography", primary_key: "geo_type_id", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "types_service_geography", primary_key: "geo_type_id", id: { type: :integer, comment: "primary key of the table, represents a single type of geography type", unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "geo_type_name", limit: 25, default: "", null: false, collation: "utf8mb4_general_ci", comment: "The type of geography this respresents, e.g. zip codes, CNTY, etc... "
     t.text "geo_type_notes"
     t.datetime "date_added", default: -> { "CURRENT_TIMESTAMP" }
@@ -807,7 +807,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "status_id", limit: 1, default: 1, null: false, comment: "status of the record, uses codes from table status_codes", unsigned: true
   end
 
-  create_table "zip_codes", primary_key: "zip_id", id: :integer, limit: 3, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", comment: "every unique zip code in the us and the multi-county zips, processed with ranking by address counts", force: :cascade do |t|
+  create_table "zip_codes", primary_key: "zip_id", id: { type: :integer, limit: 3, unsigned: true }, charset: "utf8", collation: "utf8_unicode_ci", comment: "every unique zip code in the us and the multi-county zips, processed with ranking by address counts", force: :cascade do |t|
     t.string "zip_code", limit: 5, default: "", null: false, collation: "utf8_general_ci"
     t.string "city", limit: 50, default: "", null: false
     t.string "state", limit: 2, default: "", null: false
