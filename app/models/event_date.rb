@@ -39,4 +39,9 @@ class EventDate < ApplicationRecord
   def still_open?
     DateTime.current.utc.strftime('%Y-%m-%d %H:%M:%S') <= published_end_datetime
   end
+
+  def event_reserved_count
+    response = HTTParty.get("http://localhost:4444/api/reservations/events_count?event_date_id=#{id}")
+    response.parsed_response['events_count']
+  end  
 end
