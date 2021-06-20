@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 describe Event, type: :model do
-  let(:event) { create(:event) }
+  let(:event) { create(:event, latitude: 39.86397, longitude: -83.12886) }
+  let(:zip_code) do
+    create(:zip_code, zip_code: 43_219, latitude: 40.01310,
+                      longitude: -82.92363)
+  end
 
   it 'belongs to an agency' do
     expect(event.agency).to be_an_instance_of(Agency)
@@ -72,6 +76,14 @@ describe Event, type: :model do
       service_category_name = 'Produce'
       expect(described_class.by_service_category(service_category_name))
         .to eq([])
+    end
+  end
+
+  context 'with method estimated_distance' do
+    let(:user_location) { zip_code }
+
+    it 'can find distance form user location to event address' do
+      expect(event.estimated_distance(user_location)).to eq(15.07)
     end
   end
 end

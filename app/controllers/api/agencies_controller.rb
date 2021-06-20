@@ -9,11 +9,11 @@ module Api
     before_action :set_agency, only: [:show]
 
     def index
-      by_zip(@zip)
+      by_zip
 
-      by_zip_and_distance(@zip, @distance)
+      by_zip_and_distance
 
-      with_event_after(@event_date)
+      with_event_after
 
       if @agencies.blank?
         render json: {}
@@ -84,25 +84,39 @@ module Api
                                                   .as_json
     end
 
-    def by_zip(zip)
-      return unless zip
+    def by_zip
+      return unless @zip
 
-      @agencies = @agencies.by_zip_code(zip)
+      @agencies = @agencies.by_zip_code(@zip)
     end
 
-    def by_zip_and_distance(zip, distance)
-      return unless zip && distance
+    def by_zip_and_distance
+      return unless @zip && @distance
 
-      @agencies =
-        @agencies.select do |ag|
-          ag.estimated_distance(@user_location).to_f < distance.to_f
-        end
+      agencies = filter_agencies_by_location
+      agencies_by_event = filter_agencies_by_event_location
+      @agencies = (agencies + agencies_by_event).compact.uniq
     end
 
-    def with_event_after(date)
-      return unless date
+    def with_event_after
+      return unless @event_date
 
-      @agencies = @agencies.with_event_after(date.delete('-'))
+      @agencies = @agencies.with_event_after(@event_date.delete('-'))
+    end
+
+    def filter_agencies_by_location
+      agencies = @agencies.by_event_address_status_id(0)
+      agencies.select do |ag|
+        ag.estimated_distance(@user_location).to_f < @distance.to_f
+      end
+    end
+
+    def filter_agencies_by_event_location
+      agencies1_ids = @agencies.by_event_address_status_id(1).collect(&:id)
+      events = Event.where(loc_id: agencies1_ids)
+      events.map { |ev|
+        ev.agency if ev.estimated_distance(@user_location).to_f < @distance.to_f
+      }
     end
   end
 end
