@@ -36,6 +36,12 @@ class Event < ApplicationRecord
       .where(service_categories: { service_category_name: service_category })
   }
 
+  def estimated_distance(user_location)
+    return '' if user_location.nil?
+
+    Geo.distance_between(user_location, self)
+  end
+
   def exception_note(zip_code)
     # if zip_code parameter submitted use it, otherwise use event.zip
     event_zip = if zip_code
