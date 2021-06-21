@@ -114,9 +114,9 @@ module Api
     def filter_agencies_by_event_location
       agencies1_ids = @agencies.by_event_address_status_id(1).collect(&:id)
       events = Event.where(loc_id: agencies1_ids)
-      events.map { |ev|
+      events.map do |ev|
         ev.agency if ev.estimated_distance(@user_location).to_f < @distance.to_f
-      }
+      end
     end
   end
 end
