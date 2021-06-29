@@ -121,6 +121,8 @@ describe Api::AgenciesController, type: :controller do
           phone: agency.phone,
           name: agency.loc_name,
           nickname: agency.loc_nickname,
+          latitude: agency.pt_latitude.to_f.to_s,
+          longitude: agency.pt_longitude.to_f.to_s,
           estimated_distance: Geo.distance_between(
             OpenStruct.new(lat: lat, long: long), agency
           ),
