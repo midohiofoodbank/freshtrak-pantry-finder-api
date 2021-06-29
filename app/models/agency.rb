@@ -41,6 +41,11 @@ class Agency < ApplicationRecord
       .where(event_service_geographies: { geo_value: zip_code })
   }
 
+  scope :by_event_address_status_id, lambda { |id|
+    joins(:events)
+      .where('events.event_address_status_id = ?', id)
+  }
+
   def estimated_distance(user_location)
     return '' if user_location.nil?
 

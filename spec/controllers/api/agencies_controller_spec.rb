@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 describe Api::AgenciesController, type: :controller do
-  let(:zip_code) { create(:zip_code) }
+  let(:zip_code) do
+    create(:zip_code, zip_code: 43_219, latitude: 40.01310,
+                      longitude: -82.92363)
+  end
   let(:date) { (Date.today + 5).to_s }
   let(:agency) { create(:agency) }
   let(:form) { create(:form) }
-  let!(:event) do
-    create(:event, agency: agency, form_master_num: form.form_master_num)
+  let(:event) do
+    create(:event, agency: agency, event_address_status_id: 0,
+                   form_master_num: form.form_master_num)
   end
   let(:event_geography) { create(:event_geography) }
   let!(:event_zip_code) do
@@ -107,6 +111,23 @@ describe Api::AgenciesController, type: :controller do
     expect(response.status).to eq 200
     response_body = JSON.parse(response.body).deep_symbolize_keys
     expect(response_body).to eq(expected_response(100.1, -190.9, false))
+  end
+
+  context 'when agencies by event location if event_address_status_id is 1' do
+    let(:event) do
+      create(:event, agency: agency, event_address_status_id: 1,
+                     latitude: 39.86397, longitude: -83.12886,
+                     form_master_num: form.form_master_num)
+    end
+
+    it 'is indexable by zip_code and distance' do
+      get '/api/agencies', zip_code: event_zip_code.zip_code, distance: '25'
+      expect(response.status).to eq 200
+      response_body = JSON.parse(response.body).deep_symbolize_keys
+      expect(response_body).to eq(
+        expected_response(zip_code.lat, zip_code.long)
+      )
+    end
   end
 
   def expected_response(lat = nil, long = nil, has_zip = true)
